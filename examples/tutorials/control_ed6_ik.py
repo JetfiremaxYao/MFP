@@ -24,7 +24,7 @@ scene = gs.Scene(
         world_frame_size=1.0,
         show_link_frame=False,
         # 不出现相机实体
-        show_cameras=True,
+        show_cameras=False,
         plane_reflection=True,
         ambient_light=(0.1, 0.1, 0.1),
     ),
@@ -126,7 +126,7 @@ cube_height = cube_size[2]
 
 # 目标点：cube中心正上方，z轴+cube高度/2+0.15
 target_pos = cube_pos.copy()
-target_pos[2] += cube_height / 2 + 0.15
+target_pos[2] += cube_height / 2 + 0.35
 
 # 末端link对象
 j6_link = ed6.get_link("J6")
