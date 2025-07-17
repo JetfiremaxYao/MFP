@@ -14,16 +14,23 @@ def reset_arm(scene, ed6, motors_dof_idx):
         upper=np.array([87, 87, 87, 87, 12, 12]),
         dofs_idx_local=motors_dof_idx,
     )
-    print("执行硬重置，设置初始姿态...")
-    for i in range(150):
-        if i < 50:
-            ed6.set_dofs_position(np.array([0, 0, 0, 0, 0, 0]), motors_dof_idx)
-        elif i < 100:
-            ed6.set_dofs_position(np.array([1, 0.5, 0.5, -1, 0.5, 0]), motors_dof_idx)
-        else:
-            ed6.set_dofs_position(np.array([0, 0, 0, 0, 0, 0]), motors_dof_idx)
+    # 只直接set零位
+    ed6.set_dofs_position(np.zeros(6), motors_dof_idx)
+    for _ in range(100):
         scene.step()
     print("机械臂已回到初始零位")
+
+def reset_after_detection(scene, ed6, motors_dof_idx, steps=150):
+    """检测后平滑插值回零，模拟现实机械臂reset"""
+    qpos_now = ed6.get_dofs_position(motors_dof_idx)
+    qpos_now = qpos_now.cpu().numpy()  # 关键修正
+    qpos_zero = np.zeros_like(qpos_now)
+    path = np.linspace(qpos_now, qpos_zero, steps)
+    print("检测后平滑回零...")
+    for q in path:
+        ed6.control_dofs_position(q, motors_dof_idx)
+        scene.step()
+    print("机械臂已平滑回到初始零位")
 
 def detect_cube_position(scene, ed6, cam, motors_dof_idx):
     """机械臂环视一圈，检测cube，返回cube世界坐标"""
@@ -98,11 +105,12 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
 
 def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     """机械臂回零，IK逆解，路径插值并执行"""
-    reset_arm(scene, ed6, motors_dof_idx)
+    # reset_arm(scene, ed6, motors_dof_idx)  # 由reset_after_detection替代
     print("机械臂已回到初始零位，等待2秒...")
     time.sleep(2)
     target_quat = np.array([0, 1, 0, 0])
-    
+    target_pos = target_pos.copy()
+    target_pos[2] += 0.2
     qpos_ik = ed6.inverse_kinematics(
         link=j6_link,
         pos=target_pos,
@@ -112,7 +120,7 @@ def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     try:
         path = ed6.plan_path(
             qpos_goal=qpos_ik,
-            num_waypoints=200,
+            num_waypoints=150,
         )
         if len(path) == 0:
             raise RuntimeError("plan_path返回空路径，自动切换为线性插值")
@@ -200,6 +208,7 @@ def main():
     cam.move_to_attach()
     reset_arm(scene, ed6, motors_dof_idx)
     cube_pos = detect_cube_position(scene, ed6, cam, motors_dof_idx)
+    reset_after_detection(scene, ed6, motors_dof_idx)  # 检测后平滑回零
     plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, cube_pos, cam)
 
 if __name__ == "__main__":
