@@ -51,6 +51,7 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
     cam.move_to_attach()
     settle_steps = 100
     miss_count = 0  # 连续未检测到物体的次数
+    detected_once = False  # 是否至少检测到过一次
     for i, angle in enumerate(angles):
         qpos = qpos_scan.copy()
         qpos[0] = angle
@@ -96,13 +97,14 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
                     })
                     print(f"第{i+1}帧检测到cube，J1角度={np.rad2deg(angle):.1f}° 世界坐标: {pos_world[:3]}")
                 miss_count = 0  # 检测到物体，miss计数清零
+                detected_once = True
             else:
                 miss_count += 1
         else:
             miss_count += 1
             cv2.imshow("Detection", img)
             cv2.waitKey(100)
-        if miss_count >= 2:
+        if detected_once and miss_count >= 2:
             print(f"连续{miss_count}次未检测到物体，提前结束环视。")
             break
     cv2.destroyAllWindows()
@@ -317,7 +319,7 @@ def main():
             show_world_frame=True,
             world_frame_size=1.0,
             show_link_frame=False,
-            show_cameras=False,
+            show_cameras=True,
             plane_reflection=True,
             ambient_light=(0.1, 0.1, 0.1),
         ),
@@ -329,7 +331,9 @@ def main():
         show_viewer=True,
     )
     plane = scene.add_entity(gs.morphs.Plane(collision=True))
-    cube = scene.add_entity(gs.morphs.Box(size=(0.1, 0.1, 0.1), pos=(0.35, 0.0, 0.02), collision=True))
+
+    cube = scene.add_entity(gs.morphs.Box(size=(0.18, 0.105, 0.022), pos=(0.55, 0.0, 0.02), collision=True))
+    # cube = scene.add_entity(gs.morphs.Box(size=(0.1, 0.1, 0.1), pos=(0.35, 0.0, 0.02), collision=True))
     ed6 = scene.add_entity(gs.morphs.URDF(
         file="genesis/assets/xml/ED6-URDF-0102.SLDASM/urdf/ED6-URDF-0102.SLDASM.urdf",
         scale=1.0,
@@ -342,9 +346,9 @@ def main():
         pos=(0, 0, 0),
         lookat=(0, 0, 1),
         up=(0, 0, 1),
-        fov=30,
+        fov=40,
         aperture=2.8,
-        focus_dist=0.5,
+        focus_dist=0.015,
         GUI=True,
     )
     scene.build()
