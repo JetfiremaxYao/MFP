@@ -227,6 +227,18 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
         next_pt = best_cnt[(best_idx+1)%len(best_cnt)][0]
         tangent = next_pt - prev_pt
         tangent = tangent / (np.linalg.norm(tangent) + 1e-8)
+        # === 可视化调试：画出所有角点、当前点、切线方向 ===
+        # 1. 提取角点
+        epsilon = 0.02 * cv2.arcLength(best_cnt, True)
+        approx = cv2.approxPolyDP(best_cnt, epsilon, True)
+        vis_img = img.copy()
+        for corner in approx:
+            cv2.circle(vis_img, tuple(corner[0]), 5, (0,255,0), -1)  # 绿色角点
+        cv2.circle(vis_img, tuple(best_pt), 5, (0,0,255), -1)  # 红色当前点
+        arrow_end = (int(best_pt[0] + 30*tangent[0]), int(best_pt[1] + 30*tangent[1]))
+        cv2.arrowedLine(vis_img, tuple(best_pt), arrow_end, (255,0,0), 2)  # 蓝色切线
+        cv2.imshow('Boundary Tracking Debug', vis_img)
+        cv2.waitKey(50)
         # 4. 记录起始位置
         if not start_recorded:
             start_pos = j6_link.get_pos().cpu().numpy()
@@ -316,7 +328,7 @@ def main():
         ),
         sim_options=gs.options.SimOptions(dt=0.01),
         vis_options=gs.options.VisOptions(
-            show_world_frame=True,
+            show_world_frame=False,
             world_frame_size=1.0,
             show_link_frame=False,
             show_cameras=True,
