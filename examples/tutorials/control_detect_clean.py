@@ -34,8 +34,34 @@ def reset_after_detection(scene, ed6, motors_dof_idx, steps=150):
         scene.step()
     print("机械臂已平滑回到初始零位")
 
+def estimate_cube_range(all_frame_data):
+    """根据多帧分割结果，估算cube的x/y空间范围（世界坐标系）"""
+    all_xy = []
+    for frame in all_frame_data:
+        contour = frame['contour']
+        depth = frame['depth']
+        K = frame['K']
+        T = frame['T']
+        for pt in contour:
+            px, py = pt[0]
+            d = depth[py, px]
+            if d > 0.05:
+                x = (px - K[0,2]) * d / K[0,0]
+                y = (py - K[1,2]) * d / K[1,1]
+                z = d
+                pos_cam = np.array([x, y, z, 1])
+                pos_world = T @ pos_cam
+                all_xy.append(pos_world[:2])
+    if not all_xy:
+        raise RuntimeError("未采集到cube边界点，无法估算范围！")
+    all_xy = np.array(all_xy)
+    min_x, min_y = np.min(all_xy, axis=0)
+    max_x, max_y = np.max(all_xy, axis=0)
+    return min_x, max_x, min_y, max_y
+
+
 def detect_cube_position(scene, ed6, cam, motors_dof_idx):
-    """机械臂环视一圈，检测cube，返回cube世界坐标（遇到连续两次未检测到物体即停止）"""
+    """机械臂环视一圈，检测cube，返回cube世界坐标和x/y范围（遇到连续两次未检测到物体即停止）"""
     print("开始环视检测cube位置...")
     qpos_scan = np.zeros(6)
     qpos_scan[3] = -np.pi / 3   # J4 -60
@@ -44,6 +70,7 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
     start_angle = 0
     angles = np.linspace(start_angle, 2 * np.pi + start_angle, num_views, endpoint=False)
     results = []
+    all_frame_data = []
     qpos_scan[0] = 0
     ed6.control_dofs_position(qpos_scan, motors_dof_idx)
     for step in range(100):
@@ -95,6 +122,13 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
                         'dist_to_center': dist_to_center,
                         'angle': angle
                     })
+                    # 记录本帧分割结果用于范围估算
+                    all_frame_data.append({
+                        'contour': c,
+                        'depth': depth,
+                        'K': K,
+                        'T': T_cam2world
+                    })
                     print(f"第{i+1}帧检测到cube，J1角度={np.rad2deg(angle):.1f}° 世界坐标: {pos_world[:3]}")
                 miss_count = 0  # 检测到物体，miss计数清零
                 detected_once = True
@@ -104,7 +138,7 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
             miss_count += 1
             cv2.imshow("Detection", img)
             cv2.waitKey(100)
-        if detected_once and miss_count >= 2:
+        if detected_once and miss_count >= 1:
             print(f"连续{miss_count}次未检测到物体，提前结束环视。")
             break
     cv2.destroyAllWindows()
@@ -112,8 +146,13 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
         raise RuntimeError("环视未检测到cube，请调整颜色阈值或cube位置！")
     best = max(results, key=lambda r: (r['area'], -r['dist_to_center']))
     cube_pos = best['pos_world']
+    # 计算范围
+    min_x, max_x, min_y, max_y = estimate_cube_range(all_frame_data)
     print(f"环视完成，最终选定cube世界坐标: {cube_pos}")
-    return cube_pos
+    print(f"cube x范围: {min_x:.4f} ~ {max_x:.4f}, y范围: {min_y:.4f} ~ {max_y:.4f}")
+    print(f"cube 大小: x方向{max_x-min_x:.4f}，y方向{max_y-min_y:.4f}")
+    time.sleep(10)
+    return cube_pos, (min_x, max_x, min_y, max_y)
 
 def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     """机械臂回零，IK逆解，路径插值并执行"""
@@ -161,14 +200,7 @@ def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
             print(f"[路径跟踪] 进度: {idx+1}/{len(path)}  J1角度: {waypoint[0]:.4f}")
     print("路径执行完毕")
     time.sleep(2)
-    # print("IK运动完成！相机窗口会保持打开，你可以观察J6末端的视角。按Ctrl+C退出程序。")
-    # try:
-    #     while True:
-    #         scene.step()
-    #         rgb, depth, segmentation, normal = cam.render(
-    #             rgb=True, depth=True, segmentation=True, normal=True
-    #         )
-    # except KeyboardInterrupt:
+    
     print("程序已退出。")
 
 def detect_object_boundary(cam):
@@ -179,13 +211,13 @@ def detect_object_boundary(cam):
     edges = cv2.Canny(gray, 80, 200)
     return edges > 0  # 返回bool型mask
 
-def get_boundary_pointcloud(cam, boundary_mask):
-    """用mask筛选点云，只保留边界点"""
-    pc, _ = cam.render_pointcloud(world_frame=True)
-    points = pc[boundary_mask]
-    return points
+# def get_boundary_pointcloud(cam, boundary_mask):
+#     """用mask筛选点云，只保留边界点"""
+#     pc, _ = cam.render_pointcloud(world_frame=True)
+#     points = pc[boundary_mask]
+#     return points
 
-def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.01, max_steps=200):
+def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.08, max_steps=200):
     """
     OpenCV轮廓跟踪+切线方向自适应边界跟踪
     机械臂始终跟踪距离图像中心最近的边界点，沿切线方向移动，贴着边界走一圈。
@@ -196,6 +228,7 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
     h, w = cam.res[1], cam.res[0]
     center_img = np.array([w // 2, h // 2])
     for step in range(max_steps):
+        print(f"\n==== 第{step+1}步 ====")
         # 1. 边界检测
         rgb, depth, _, _ = cam.render(rgb=True, depth=True)
         img = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
@@ -223,12 +256,16 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
             print(f"第{step+1}步，未找到最近边界点，停止")
             break
         # 3. 计算该点的切线方向
-        prev_pt = best_cnt[(best_idx-1)%len(best_cnt)][0]
-        next_pt = best_cnt[(best_idx+1)%len(best_cnt)][0]
-        tangent = next_pt - prev_pt
-        tangent = tangent / (np.linalg.norm(tangent) + 1e-8)
+        try:
+            prev_pt = best_cnt[(best_idx-1)%len(best_cnt)][0]
+            next_pt = best_cnt[(best_idx+1)%len(best_cnt)][0]
+            tangent = next_pt - prev_pt
+            tangent = tangent / (np.linalg.norm(tangent) + 1e-8)
+        except Exception as e:
+            print(f"第{step+1}步，切线方向计算出错: {e}")
+            print(f"  best_idx={best_idx}, best_cnt长度={len(best_cnt)}")
+            break
         # === 可视化调试：画出所有角点、当前点、切线方向 ===
-        # 1. 提取角点
         epsilon = 0.02 * cv2.arcLength(best_cnt, True)
         approx = cv2.approxPolyDP(best_cnt, epsilon, True)
         vis_img = img.copy()
@@ -255,7 +292,6 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
         x = (cx - K[0,2]) * d / K[0,0]
         y = (cy - K[1,2]) * d / K[1,1]
         z = d
-        # 切线方向在像素平面上的变化对应相机坐标系下的变化
         dx = tangent[0] * d / K[0,0]
         dy = tangent[1] * d / K[1,1]
         dz = 0
@@ -264,10 +300,37 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
         T_cam2world = np.linalg.inv(cam.extrinsics)
         tangent_world = (T_cam2world @ tangent_cam)[:3]
         tangent_world = tangent_world / (np.linalg.norm(tangent_world) + 1e-8)
+        
+        # === 修复：限制Z分量，防止机械臂偏离平面 ===
+        # 保持XY方向不变，但限制Z分量的影响
+        xy_magnitude = np.sqrt(tangent_world[0]**2 + tangent_world[1]**2)
+        if xy_magnitude > 0.1:  # 如果XY方向有足够的分量
+            # 将Z分量限制在较小范围内，保持主要在XY平面内运动
+            max_z_component = 0.1  # 限制Z分量最大为0.1
+            if abs(tangent_world[2]) > max_z_component:
+                tangent_world[2] = np.sign(tangent_world[2]) * max_z_component
+            # 重新归一化
+            tangent_world = tangent_world / (np.linalg.norm(tangent_world) + 1e-8)
+        else:
+            # 如果XY分量太小，强制在XY平面内运动
+            print(f"第{step+1}步，XY分量过小({xy_magnitude:.4f})，强制在XY平面内运动")
+            tangent_world[2] = 0
+            if xy_magnitude > 0:
+                tangent_world[:2] = tangent_world[:2] / xy_magnitude
+            else:
+                # 如果完全没有XY分量，使用默认方向
+                tangent_world = np.array([1, 0, 0])  # 默认向右
+        
+        print(f"  原始tangent_world: {(T_cam2world @ tangent_cam)[:3]}")
+        print(f"  修正后tangent_world: {tangent_world}")
+        
         # 8. 机械臂末端移动
         pos = j6_link.get_pos().cpu().numpy()
         target_pos = pos + tangent_world * step_size
         target_quat = j6_link.get_quat().cpu().numpy()
+        print(f"  当前末端位置: {pos}")
+        print(f"  目标方向(tangent_world): {tangent_world}")
+        print(f"  目标点(target_pos): {target_pos}")
         # 9. 采集点云（只保留当前帧所有边界点）
         mask = np.zeros_like(edges, dtype=bool)
         for cnt in contours:
@@ -277,6 +340,11 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
         points = pc[mask]
         all_points.append(points)
         print(f"第{step+1}步，采集到{len(points)}个边界点")
+        # 实时可视化每一步点云
+        import open3d as o3d
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(points)
+        o3d.visualization.draw_geometries([pcd], window_name=f"Step {step+1} PointCloud", width=400, height=300)
         # 10. 检查是否回到起始位置
         if start_recorded:
             dist_to_start = np.linalg.norm(pos - start_pos)
@@ -291,11 +359,38 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
         if np.any(np.isnan(qpos_ik)) or np.any(np.isinf(qpos_ik)):
             print(f"第{step+1}步，IK逆解失败，目标位置可能超出工作空间")
             break
+        
+        # === 新增：验证IK解的有效性 ===
+        # 检查关节角度是否在合理范围内
+        joint_limits = np.array([[-np.pi, np.pi], [-np.pi, np.pi], [-np.pi, np.pi], 
+                                [-np.pi, np.pi], [-np.pi, np.pi], [-np.pi, np.pi]])
+        for i, (q, limits) in enumerate(zip(qpos_ik, joint_limits)):
+            if q < limits[0] or q > limits[1]:
+                print(f"第{step+1}步，关节{i}角度{q:.4f}超出范围[{limits[0]:.4f}, {limits[1]:.4f}]")
+                break
+        else:
+            # 所有关节角度都在范围内，继续执行
+            pass
+        
         # 12. 控制机械臂移动
         ed6.control_dofs_position(qpos_ik, motors_dof_idx)
         for _ in range(30):
             scene.step()
         cam.move_to_attach()
+        
+        # === 新增：验证实际到达位置 ===
+        actual_pos = j6_link.get_pos().cpu().numpy()
+        pos_error = np.linalg.norm(actual_pos - target_pos)
+        print(f"  目标位置: {target_pos}")
+        print(f"  实际位置: {actual_pos}")
+        print(f"  位置误差: {pos_error:.4f}米")
+        
+        # 如果位置误差过大，可能是IK失败或机械臂卡住了
+        if pos_error > 0.05:  # 5cm误差阈值
+            print(f"第{step+1}步，位置误差过大({pos_error:.4f}m)，可能IK失败或机械臂卡住")
+            print(f"  建议：减小step_size或检查工作空间")
+            break
+        
         print(f"第{step+1}步移动完成\n")
     if len(all_points) == 0:
         print("未采集到任何边界点云！")
@@ -315,6 +410,39 @@ def visualize_and_save_pointcloud(points, filename="boundary_cloud.ply"):
     print(f"点云已保存为{filename}")
     # 修正 linter 报错，使用 o3d.visualization.draw_geometries
     o3d.visualization.draw_geometries([pcd])  # type: ignore
+
+def xy_grid_scan(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, x_range, y_range):
+    all_points = []
+    z_height = cube_pos[2] + 0.1  # z高度始终为cube_pos[2]+0.1
+    x_step = 0.08
+    y_step = 0.08
+    x_vals = np.arange(x_range[0], x_range[1] + x_step, x_step)
+    y_vals = np.arange(y_range[0], y_range[1] + y_step, y_step)
+    scan_path = [(x, y) for i, x in enumerate(x_vals)
+                 for y in (y_vals if i % 2 == 0 else reversed(y_vals))]
+
+    for idx, (x, y) in enumerate(scan_path):
+        target_pos = np.array([x, y, z_height])
+        target_quat = np.array([0, 1, 0, 0])
+        qpos_ik = ed6.inverse_kinematics(j6_link, target_pos, target_quat).cpu().numpy()
+        if np.any(np.isnan(qpos_ik)):
+            print(f"第{idx+1}步，IK失败，跳过")
+            continue
+        ed6.control_dofs_position(qpos_ik, motors_dof_idx)
+        for _ in range(30):
+            scene.step()
+        cam.move_to_attach()
+        pc, _ = cam.render_pointcloud(world_frame=True)
+        all_points.append(pc)
+        print(f"[{idx+1}/{len(scan_path)}] 点({x:.3f}, {y:.3f})，点云数: {len(pc)}")
+        # 实时可视化
+        pcd = o3d.geometry.PointCloud()
+        pcd.points = o3d.utility.Vector3dVector(pc)
+        o3d.visualization.draw_geometries([pcd], window_name=f"Scan {idx+1}", width=400, height=300)
+
+    return np.concatenate(all_points, axis=0) if all_points else np.zeros((0, 3))
+
+
 
 def main():
     gs.init(seed=0, precision="32", logging_level="debug")
@@ -344,7 +472,7 @@ def main():
     )
     plane = scene.add_entity(gs.morphs.Plane(collision=True))
 
-    cube = scene.add_entity(gs.morphs.Box(size=(0.18, 0.105, 0.022), pos=(0.55, 0.0, 0.02), collision=True))
+    cube = scene.add_entity(gs.morphs.Box(size=(0.105, 0.18, 0.022), pos=(0.35, 0, 0.02), collision=True))
     # cube = scene.add_entity(gs.morphs.Box(size=(0.1, 0.1, 0.1), pos=(0.35, 0.0, 0.02), collision=True))
     ed6 = scene.add_entity(gs.morphs.URDF(
         file="genesis/assets/xml/ED6-URDF-0102.SLDASM/urdf/ED6-URDF-0102.SLDASM.urdf",
@@ -358,7 +486,7 @@ def main():
         pos=(0, 0, 0),
         lookat=(0, 0, 1),
         up=(0, 0, 1),
-        fov=40,
+        fov=60,
         aperture=2.8,
         focus_dist=0.015,
         GUI=True,
@@ -371,7 +499,7 @@ def main():
     scene.step()
     cam.move_to_attach()
     reset_arm(scene, ed6, motors_dof_idx)
-    cube_pos = detect_cube_position(scene, ed6, cam, motors_dof_idx)
+    cube_pos, (min_x, max_x, min_y, max_y) = detect_cube_position(scene, ed6, cam, motors_dof_idx)
     reset_after_detection(scene, ed6, motors_dof_idx)  # 检测后平滑回零
     plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, cube_pos, cam)
     # === 新增：自动边界跟踪与点云采集 ===
