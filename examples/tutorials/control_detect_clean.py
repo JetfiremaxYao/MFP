@@ -62,7 +62,8 @@ def estimate_cube_range(all_frame_data):
 
 def detect_cube_position(scene, ed6, cam, motors_dof_idx):
     """机械臂环视一圈，检测cube，返回cube世界坐标和x/y范围（遇到连续两次未检测到物体即停止）"""
-    print("开始环视检测cube位置...")
+    print("开始环视检测cube位置... (按Enter继续)")
+    input()
     qpos_scan = np.zeros(6)
     qpos_scan[3] = -np.pi / 3   # J4 -60
     qpos_scan[4] = np.pi / 2   # J5 +90°
@@ -157,7 +158,8 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
 def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     """机械臂回零，IK逆解，路径插值并执行"""
     # reset_arm(scene, ed6, motors_dof_idx)  # 由reset_after_detection替代
-    print("机械臂已回到初始零位，等待2秒...")
+    print("机械臂已回到初始零位，等待2秒... (按Enter继续)")
+    input()
     time.sleep(2)
     target_quat = np.array([0, 1, 0, 0])
     target_pos = target_pos.copy()
@@ -168,7 +170,7 @@ def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
         quat=target_quat,
     )
     
-    # 处理tensor到numpy的转换（MPS设备兼容）
+    # 处理tensor到numpy的转换
     if hasattr(qpos_ik, 'cpu'):
         qpos_ik = qpos_ik.cpu().numpy()
     
@@ -199,9 +201,10 @@ def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
         if idx % 20 == 0:
             print(f"[路径跟踪] 进度: {idx+1}/{len(path)}  J1角度: {waypoint[0]:.4f}")
     print("路径执行完毕")
+    scene.clear_debug_object(path_debug)
+    scene.step()
     time.sleep(2)
-    
-    print("程序已退出。")
+
 
 def detect_object_boundary(cam):
     """用Canny检测当前帧物体边界，返回边界像素mask"""
@@ -217,7 +220,7 @@ def detect_object_boundary(cam):
 #     points = pc[boundary_mask]
 #     return points
 
-def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.08, max_steps=200):
+def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.05, max_steps=200):
     """
     OpenCV轮廓跟踪+切线方向自适应边界跟踪
     机械臂始终跟踪距离图像中心最近的边界点，沿切线方向移动，贴着边界走一圈。
@@ -228,7 +231,8 @@ def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, 
     h, w = cam.res[1], cam.res[0]
     center_img = np.array([w // 2, h // 2])
     for step in range(max_steps):
-        print(f"\n==== 第{step+1}步 ====")
+        # print(f"\n==== 第{step+1}步 ====")
+        # input("按Enter继续扫描下一步...\n")
         # 1. 边界检测
         rgb, depth, _, _ = cam.render(rgb=True, depth=True)
         img = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
@@ -473,6 +477,8 @@ def main():
     plane = scene.add_entity(gs.morphs.Plane(collision=True))
 
     cube = scene.add_entity(gs.morphs.Box(size=(0.105, 0.18, 0.022), pos=(0.35, 0, 0.02), collision=True))
+
+
     # cube = scene.add_entity(gs.morphs.Box(size=(0.1, 0.1, 0.1), pos=(0.35, 0.0, 0.02), collision=True))
     ed6 = scene.add_entity(gs.morphs.URDF(
         file="genesis/assets/xml/ED6-URDF-0102.SLDASM/urdf/ED6-URDF-0102.SLDASM.urdf",
@@ -494,7 +500,7 @@ def main():
     scene.build()
     motors_dof_idx = list(range(6))
     j6_link = ed6.get_link("J6")
-    offset_T = gu.trans_quat_to_T(np.array([0, 0, 0.08]), np.array([0, 1, 0, 0]))
+    offset_T = gu.trans_quat_to_T(np.array([0, 0, 0.05]), np.array([0, 1, 0, 0]))
     cam.attach(j6_link, offset_T)
     scene.step()
     cam.move_to_attach()
