@@ -25,7 +25,7 @@ def reset_arm(scene, ed6, motors_dof_idx):
 def reset_after_detection(scene, ed6, motors_dof_idx, steps=150):
     """检测后平滑插值回零，模拟现实机械臂reset"""
     qpos_now = ed6.get_dofs_position(motors_dof_idx)
-    qpos_now = qpos_now.cpu().numpy()  # 关键修正
+    qpos_now = qpos_now.cpu().numpy()  
     qpos_zero = np.zeros_like(qpos_now)
     path = np.linspace(qpos_now, qpos_zero, steps)
     print("检测后平滑回零...")
@@ -62,8 +62,8 @@ def estimate_cube_range(all_frame_data):
 
 def detect_cube_position(scene, ed6, cam, motors_dof_idx):
     """机械臂环视一圈，检测cube，返回cube世界坐标和x/y范围（遇到连续两次未检测到物体即停止）"""
-    print("开始环视检测cube位置... (按Enter继续)")
-    input()
+    # print("开始环视检测cube位置... (按Enter继续)")
+    # input()
     qpos_scan = np.zeros(6)
     qpos_scan[3] = -np.pi / 3   # J4 -60
     qpos_scan[4] = np.pi / 2   # J5 +90°
@@ -158,8 +158,8 @@ def detect_cube_position(scene, ed6, cam, motors_dof_idx):
 def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     """机械臂回零，IK逆解，路径插值并执行"""
     # reset_arm(scene, ed6, motors_dof_idx)  # 由reset_after_detection替代
-    print("机械臂已回到初始零位，等待2秒... (按Enter继续)")
-    input()
+    # print("机械臂已回到初始零位，等待2秒... (按Enter继续)")
+    # input()
     time.sleep(2)
     target_quat = np.array([0, 1, 0, 0])
     target_pos = target_pos.copy()
@@ -220,7 +220,7 @@ def detect_object_boundary(cam):
 #     points = pc[boundary_mask]
 #     return points
 
-def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.05, max_steps=200):
+def track_and_scan_boundary(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, step_size=0.08, max_steps=30):
     """
     OpenCV轮廓跟踪+切线方向自适应边界跟踪
     机械臂始终跟踪距离图像中心最近的边界点，沿切线方向移动，贴着边界走一圈。
@@ -415,36 +415,36 @@ def visualize_and_save_pointcloud(points, filename="boundary_cloud.ply"):
     # 修正 linter 报错，使用 o3d.visualization.draw_geometries
     o3d.visualization.draw_geometries([pcd])  # type: ignore
 
-def xy_grid_scan(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, x_range, y_range):
-    all_points = []
-    z_height = cube_pos[2] + 0.1  # z高度始终为cube_pos[2]+0.1
-    x_step = 0.08
-    y_step = 0.08
-    x_vals = np.arange(x_range[0], x_range[1] + x_step, x_step)
-    y_vals = np.arange(y_range[0], y_range[1] + y_step, y_step)
-    scan_path = [(x, y) for i, x in enumerate(x_vals)
-                 for y in (y_vals if i % 2 == 0 else reversed(y_vals))]
+# def xy_grid_scan(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, x_range, y_range):
+#     all_points = []
+#     z_height = cube_pos[2] + 0.1  # z高度始终为cube_pos[2]+0.1
+#     x_step = 0.08
+#     y_step = 0.08
+#     x_vals = np.arange(x_range[0], x_range[1] + x_step, x_step)
+#     y_vals = np.arange(y_range[0], y_range[1] + y_step, y_step)
+#     scan_path = [(x, y) for i, x in enumerate(x_vals)
+#                  for y in (y_vals if i % 2 == 0 else reversed(y_vals))]
 
-    for idx, (x, y) in enumerate(scan_path):
-        target_pos = np.array([x, y, z_height])
-        target_quat = np.array([0, 1, 0, 0])
-        qpos_ik = ed6.inverse_kinematics(j6_link, target_pos, target_quat).cpu().numpy()
-        if np.any(np.isnan(qpos_ik)):
-            print(f"第{idx+1}步，IK失败，跳过")
-            continue
-        ed6.control_dofs_position(qpos_ik, motors_dof_idx)
-        for _ in range(30):
-            scene.step()
-        cam.move_to_attach()
-        pc, _ = cam.render_pointcloud(world_frame=True)
-        all_points.append(pc)
-        print(f"[{idx+1}/{len(scan_path)}] 点({x:.3f}, {y:.3f})，点云数: {len(pc)}")
-        # 实时可视化
-        pcd = o3d.geometry.PointCloud()
-        pcd.points = o3d.utility.Vector3dVector(pc)
-        o3d.visualization.draw_geometries([pcd], window_name=f"Scan {idx+1}", width=400, height=300)
+#     for idx, (x, y) in enumerate(scan_path):
+#         target_pos = np.array([x, y, z_height])
+#         target_quat = np.array([0, 1, 0, 0])
+#         qpos_ik = ed6.inverse_kinematics(j6_link, target_pos, target_quat).cpu().numpy()
+#         if np.any(np.isnan(qpos_ik)):
+#             print(f"第{idx+1}步，IK失败，跳过")
+#             continue
+#         ed6.control_dofs_position(qpos_ik, motors_dof_idx)
+#         for _ in range(30):
+#             scene.step()
+#         cam.move_to_attach()
+#         pc, _ = cam.render_pointcloud(world_frame=True)
+#         all_points.append(pc)
+#         print(f"[{idx+1}/{len(scan_path)}] 点({x:.3f}, {y:.3f})，点云数: {len(pc)}")
+#         # 实时可视化
+#         pcd = o3d.geometry.PointCloud()
+#         pcd.points = o3d.utility.Vector3dVector(pc)
+#         o3d.visualization.draw_geometries([pcd], window_name=f"Scan {idx+1}", width=400, height=300)
 
-    return np.concatenate(all_points, axis=0) if all_points else np.zeros((0, 3))
+#     return np.concatenate(all_points, axis=0) if all_points else np.zeros((0, 3))
 
 
 
