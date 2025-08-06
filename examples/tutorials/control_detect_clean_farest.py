@@ -509,7 +509,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
                 
                 # 每一步都显示检测方法比较
                 print(f"第{step+1}步检测方法比较:")
-                compare_detection_methods(cam)
+                compare_detection_methods(cam, show_images=True, step_num=step+1)  # 每一步都显示图像比较
                 
                 # 可视化RGB-D检测结果
                 visualize_rgbd_detection(contours, rgb, depth, "RGB-D Boundary Detection")
@@ -1034,7 +1034,21 @@ def visualize_rgbd_detection(contours, rgb, depth, window_name="RGB-D Boundary D
     cv2.imshow(window_name, combined)
     cv2.waitKey(100)
 
-def compare_detection_methods(cam, show_images=False):
+def ensure_window_created(window_name):
+    """
+    确保窗口被正确创建和显示
+    
+    Parameters:
+    -----------
+    window_name : str
+        窗口名称
+    """
+    # 创建一个小的测试图像来确保窗口被创建
+    test_img = np.zeros((100, 100, 3), dtype=np.uint8)
+    cv2.imshow(window_name, test_img)
+    cv2.waitKey(1)  # 短暂等待确保窗口创建
+
+def compare_detection_methods(cam, show_images=False, step_num=None):
     """
     比较Canny边缘检测和RGB-D边界检测的效果
     
@@ -1044,6 +1058,8 @@ def compare_detection_methods(cam, show_images=False):
         摄像机对象
     show_images : bool
         是否显示比较图像
+    step_num : int
+        当前步骤数，用于窗口标题
     """
     # 获取图像
     rgb, depth, _, _ = cam.render(rgb=True, depth=True)
@@ -1061,9 +1077,10 @@ def compare_detection_methods(cam, show_images=False):
     contours_advanced, _, _ = detect_boundary_advanced_rgbd(cam)
     
     # 显示轮廓数量比较
-    print(f"  Canny: {len(contours_canny)} 个轮廓")
-    print(f"  RGB-D: {len(contours_rgbd)} 个轮廓")
-    print(f"  高级RGB-D: {len(contours_advanced)} 个轮廓")
+    step_info = f" (Step {step_num})" if step_num is not None else ""
+    print(f"  Canny{step_info}: {len(contours_canny)} 个轮廓")
+    print(f"  RGB-D{step_info}: {len(contours_rgbd)} 个轮廓")
+    print(f"  高级RGB-D{step_info}: {len(contours_advanced)} 个轮廓")
     
     # 只在需要时显示图像
     if show_images:
@@ -1087,17 +1104,25 @@ def compare_detection_methods(cam, show_images=False):
         comparison[:, w*2:] = advanced_vis
         
         # 添加标签
-        cv2.putText(comparison, "Canny", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        step_title = f"Step {step_num} - " if step_num is not None else ""
+        cv2.putText(comparison, f"{step_title}Canny", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(comparison, f"Contours: {len(contours_canny)}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
-        cv2.putText(comparison, "RGB-D", (w+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(comparison, f"{step_title}RGB-D", (w+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(comparison, f"Contours: {len(contours_rgbd)}", (w+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
-        cv2.putText(comparison, "Advanced RGB-D", (w*2+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(comparison, f"{step_title}Advanced RGB-D", (w*2+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(comparison, f"Contours: {len(contours_advanced)}", (w*2+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
-        cv2.imshow("Detection Methods Comparison", comparison)
-        cv2.waitKey(2000)  # 显示2秒
+        # 使用固定的窗口名称，确保每次都更新同一个窗口
+        window_name = "Detection Methods Comparison"
+        
+        # 确保窗口被正确创建
+        if step_num == 1:  # 只在第一步创建窗口
+            ensure_window_created(window_name)
+        
+        cv2.imshow(window_name, comparison)
+        cv2.waitKey(100)  # 减少等待时间，让界面更流畅
     
     return contours_canny, contours_rgbd, contours_advanced
 
@@ -1195,10 +1220,6 @@ def main():
     cube_pos, (min_x, max_x, min_y, max_y) = detect_cube_position(scene, ed6, cam, motors_dof_idx)
     reset_after_detection(scene, ed6, motors_dof_idx)  # 检测后平滑回零
     plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, cube_pos, cam)
-    
-    # 比较不同检测方法的效果
-    print("\n开始检测方法比较...")
-    compare_detection_methods(cam, show_images=True)  # 只在第一步显示图像比较
     
     # === 新增：自动边界跟踪与点云采集 ===
     print("\n开始自动边界跟踪与点云采集...")
