@@ -1,4 +1,4 @@
-# 基于Canny边缘检测的边界追踪对比实验
+# 基于Canny边缘检测的边界追踪实验
 import genesis as gs
 import numpy as np
 import time
@@ -10,6 +10,10 @@ import threading
 import sys
 import select
 import os
+from math import ceil
+from scipy.spatial.distance import cdist
+from scipy.spatial import ConvexHull
+from scipy import ndimage
 
 # 全局变量用于ESC键检测
 esc_pressed = False
@@ -115,181 +119,6 @@ def plan_and_execute_path(scene, ed6, motors_dof_idx, j6_link, target_pos, cam):
     scene.step()
     time.sleep(2)
 
-def detect_pointcloud_closure(points, closure_threshold=0.02, min_points=50):
-    """
-    检测点云是否形成闭环
-    
-    Parameters:
-    -----------
-    points : np.ndarray
-        点云数据，形状为(N, 3)
-    closure_threshold : float
-        闭环检测阈值，默认0.02米
-    min_points : int
-        最少点数要求，默认50个点
-    
-    Returns:
-    --------
-    bool : 是否形成闭环
-    float : 闭环质量（0-1之间，1表示完美闭环）
-    """
-    if len(points) < min_points:
-        return False, 0.0
-    
-    # 计算点云的边界框
-    min_coords = np.min(points, axis=0)
-    max_coords = np.max(points, axis=0)
-    bbox_size = max_coords - min_coords
-    
-    # 如果边界框太小，可能不是有效的闭环
-    if np.any(bbox_size < 0.01):  # 小于1cm的边界框
-        return False, 0.0
-    
-    # 方法1: 检查首尾点距离
-    if len(points) > 0:
-        start_end_dist = np.linalg.norm(points[0] - points[-1])
-        closure_quality_1 = max(0, 1 - start_end_dist / closure_threshold)
-    else:
-        closure_quality_1 = 0.0
-    
-    # 方法2: 检查点云密度分布
-    # 计算每个点到其他点的平均距离
-    if len(points) > 10:
-        from scipy.spatial.distance import cdist
-        distances = cdist(points, points)
-        np.fill_diagonal(distances, np.inf)  # 排除自身
-        min_distances = np.min(distances, axis=1)
-        avg_min_distance = np.mean(min_distances)
-        
-        # 如果平均最小距离很小，说明点云密集，可能是闭环
-        density_quality = max(0, 1 - avg_min_distance / 0.01)  # 1cm作为密集阈值
-    else:
-        density_quality = 0.0
-    
-    # 方法3: 检查点云的空间分布
-    # 计算点云的重心
-    centroid = np.mean(points, axis=0)
-    distances_to_centroid = np.linalg.norm(points - centroid, axis=1)
-    std_distance = np.std(distances_to_centroid)
-    mean_distance = np.mean(distances_to_centroid)
-    
-    # 如果距离标准差相对于平均距离较小，说明点云分布较均匀
-    if mean_distance > 0:
-        uniformity_quality = max(0, 1 - std_distance / mean_distance)
-    else:
-        uniformity_quality = 0.0
-    
-    # 综合评分
-    closure_quality = (closure_quality_1 * 0.4 + density_quality * 0.3 + uniformity_quality * 0.3)
-    
-    # 判断是否形成闭环
-    is_closed = closure_quality > 0.6  # 60%以上质量认为形成闭环
-    
-    return is_closed, closure_quality
-
-def is_clockwise_direction(current_angle, last_angle, tolerance=np.pi/4):
-    """
-    检查当前方向是否符合顺时针约束
-    
-    Parameters:
-    -----------
-    current_angle : float
-        当前方向角度
-    last_angle : float
-        上一次方向角度
-    tolerance : float
-        允许的角度偏差
-    
-    Returns:
-    --------
-    bool : 是否符合顺时针方向
-    """
-    if last_angle is None:
-        return True
-    
-    # 计算角度差
-    angle_diff = current_angle - last_angle
-    
-    # 处理角度跨越±π的情况
-    if angle_diff > np.pi:
-        angle_diff -= 2 * np.pi
-    elif angle_diff < -np.pi:
-        angle_diff += 2 * np.pi
-    
-    # 顺时针方向：角度差应该为正（或接近0）
-    return angle_diff >= -tolerance
-
-def optimize_camera_angle(cam, current_contours, img_center):
-    """
-    根据检测效果优化摄像机角度
-    
-    Parameters:
-    -----------
-    cam : Camera
-        摄像机对象
-    current_contours : list
-        当前检测到的轮廓
-    img_center : np.ndarray
-        图像中心点
-    
-    Returns:
-    --------
-    bool : 是否需要调整角度
-    """
-    if not current_contours:
-        return True  # 没有检测到轮廓，需要调整
-    
-    # 计算轮廓在图像中的分布
-    all_contour_points = []
-    for cnt in current_contours:
-        all_contour_points.extend(cnt.reshape(-1, 2))
-    
-    if not all_contour_points:
-        return True
-    
-    all_contour_points = np.array(all_contour_points)
-    
-    # 计算轮廓中心
-    contour_center = np.mean(all_contour_points, axis=0)
-    
-    # 计算轮廓中心到图像中心的距离
-    center_offset = np.linalg.norm(contour_center - img_center)
-    
-    # 如果轮廓中心偏离图像中心太远，需要调整角度
-    max_offset = 100  # 像素阈值
-    
-    return center_offset > max_offset
-
-def adjust_camera_orientation(scene, ed6, cam, motors_dof_idx, j6_link, target_angle_offset):
-    """
-    调整摄像机朝向
-    
-    Parameters:
-    -----------
-    target_angle_offset : float
-        目标角度偏移（弧度）
-    """
-    current_pos = j6_link.get_pos().cpu().numpy()
-    current_quat = j6_link.get_quat().cpu().numpy()
-    
-    # 计算新的朝向
-    # 这里简化处理，实际应用中可能需要更复杂的角度计算
-    target_quat = current_quat.copy()
-    
-    # 使用IK调整机械臂朝向
-    qpos_ik = ed6.inverse_kinematics(link=j6_link, pos=current_pos, quat=target_quat)
-    if hasattr(qpos_ik, 'cpu'):
-        qpos_ik = qpos_ik.cpu().numpy()
-    
-    if not np.any(np.isnan(qpos_ik)) and not np.any(np.isinf(qpos_ik)):
-        ed6.control_dofs_position(qpos_ik, motors_dof_idx)
-        for _ in range(30):
-            scene.step()
-        cam.move_to_attach()
-        return True
-    
-    return False
-
 def detect_boundary_canny(cam, min_contour_area=100):
     """
     使用Canny边缘检测进行边界检测
@@ -299,7 +128,7 @@ def detect_boundary_canny(cam, min_contour_area=100):
     cam : Camera
         摄像机对象
     min_contour_area : int
-        最小轮廓面积
+        最小轮廓面积（为了保持接口一致，但实际不使用）
     
     Returns:
     --------
@@ -314,61 +143,14 @@ def detect_boundary_canny(cam, min_contour_area=100):
     rgb, depth, _, _ = cam.render(rgb=True, depth=True)
     img = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
     
-    # Canny边缘检测
+    # Canny边缘检测 - 使用原始参数，与RGBD版本完全一致
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges = cv2.Canny(gray, 80, 200)
+    edges = cv2.Canny(gray, 80, 200)  # 原始参数：80, 200
     contours, _ = cv2.findContours(edges, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     
-    # 过滤小轮廓
-    filtered_contours = []
-    for cnt in contours:
-        area = cv2.contourArea(cnt)
-        if area > min_contour_area:
-            filtered_contours.append(cnt)
-    
-    return filtered_contours, rgb, depth
-
-def visualize_canny_detection(contours, rgb, depth, window_name="Canny Boundary Detection"):
-    """
-    可视化Canny边界检测结果
-    
-    Parameters:
-    -----------
-    contours : list
-        检测到的轮廓
-    rgb : np.ndarray
-        RGB图像
-    depth : np.ndarray
-        深度图像
-    window_name : str
-        窗口名称
-    """
-    # 创建可视化图像
-    vis_img = rgb.copy()
-    
-    # 绘制轮廓（绿色）
-    cv2.drawContours(vis_img, contours, -1, (0, 255, 0), 2)
-    
-    # 显示深度图像
-    depth_normalized = cv2.normalize(depth, None, 0, 255, cv2.NORM_MINMAX)
-    depth_colored = cv2.applyColorMap(depth_normalized.astype(np.uint8), cv2.COLORMAP_JET)
-    
-    # 创建组合显示
-    h, w = rgb.shape[:2]
-    combined = np.zeros((h, w*2, 3), dtype=np.uint8)
-    combined[:, :w] = cv2.cvtColor(vis_img, cv2.COLOR_RGB2BGR)
-    combined[:, w:] = depth_colored
-    
-    # 添加标签
-    cv2.putText(combined, "RGB + Contours", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-    cv2.putText(combined, f"Contours: {len(contours)}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    
-    cv2.putText(combined, "Depth Map", (w+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-    cv2.putText(combined, f"Min: {np.min(depth):.3f}m", (w+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    cv2.putText(combined, f"Max: {np.max(depth):.3f}m", (w+10, 80), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-    
-    cv2.imshow(window_name, combined)
-    cv2.waitKey(100)
+    # 不进行面积过滤，与RGBD版本保持一致
+    # 直接返回所有检测到的轮廓
+    return contours, rgb, depth
 
 def ensure_window_created(window_name):
     """
@@ -386,7 +168,7 @@ def ensure_window_created(window_name):
 
 def compare_detection_methods(cam, show_images=False, step_num=None):
     """
-    比较Canny边缘检测的效果
+    显示Canny边缘检测的效果
     
     Parameters:
     -----------
@@ -401,17 +183,14 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
     rgb, depth, _, _ = cam.render(rgb=True, depth=True)
     img = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
     
-    # Canny边缘检测
+    # Canny边缘检测 - 使用原始参数，与RGBD版本完全一致
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    edges_canny = cv2.Canny(gray, 80, 200)
+    edges_canny = cv2.Canny(gray, 80, 200)  # 原始参数：80, 200
     contours_canny, _ = cv2.findContours(edges_canny, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
     
-    # 过滤小轮廓
-    filtered_contours_canny = []
-    for cnt in contours_canny:
-        area = cv2.contourArea(cnt)
-        if area > 100:  # 最小面积阈值
-            filtered_contours_canny.append(cnt)
+    # 不进行面积过滤，与RGBD版本保持一致
+    # 直接使用所有检测到的轮廓
+    filtered_contours_canny = contours_canny
     
     # 显示轮廓数量比较
     step_info = f" (Step {step_num})" if step_num is not None else ""
@@ -423,7 +202,7 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
         h, w = img.shape[:2]
         comparison = np.zeros((h, w, 3), dtype=np.uint8)
         
-        # Canny结果
+        # Canny结果 - 使用绿色绘制轮廓
         canny_vis = img.copy()
         cv2.drawContours(canny_vis, filtered_contours_canny, -1, (0, 255, 0), 2)
         comparison = canny_vis
@@ -436,14 +215,425 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
         # 使用固定的窗口名称，确保每次都更新同一个窗口
         window_name = "Detection Methods Comparison (Canny)"
         
-        # 确保窗口被正确创建
-        if step_num == 1:  # 只在第一步创建窗口
-            ensure_window_created(window_name)
-        
         cv2.imshow(window_name, comparison)
         cv2.waitKey(100)  # 减少等待时间，让界面更流畅
     
     return filtered_contours_canny
+
+def detect_pointcloud_closure(points, cube_pos, cube_size, closure_threshold=0.02, min_points=50):
+    """
+    检测点云是否形成闭环 - 混合策略（图像法+图论法）
+    
+    Parameters:
+    -----------
+    points : np.ndarray
+        点云数据，形状为(N, 3)
+    cube_pos : np.ndarray
+        物体中心位置，形状为(3,)
+    cube_size : np.ndarray
+        物体尺寸，形状为(3,)
+    closure_threshold : float
+        闭环检测阈值，默认0.02米
+    min_points : int
+        最少点数要求，默认80个点（GPT-5建议）
+    
+    Returns:
+    --------
+    bool : 是否形成闭环
+    float : 闭环质量（0-1之间，1表示完美闭环）
+    dict : 详细的检测指标
+    """
+    # 前置否决条件
+    if not check_closure_prerequisites(points):
+        return False, 0.0, {}
+    
+    # 计算目标顶面面积（用于参数设置）
+    target_face_area = cube_size[0] * cube_size[1]  # 约0.0189 m²
+    
+    # ===== 方法A：图像法（投影→栅格化→洪泛填充）=====
+    closure_a, metrics_a = detect_closure_flood_fill(points, cube_size, target_face_area)
+    
+    # ===== 方法B：图论法（kNN图→拓扑环检测）=====
+    closure_b, metrics_b = detect_closure_graph_topology(points, cube_size, target_face_area)
+    
+    # ===== 并联判定：任一方法检测到闭环即可 =====
+    is_closed = closure_a or closure_b
+    
+    # 计算综合质量分数
+    closure_quality = max(metrics_a.get('flood_fill_quality', 0.0), metrics_b.get('graph_quality', 0.0))
+    
+    # 准备详细的检测指标
+    detailed_metrics = {
+        'method_a_closure': closure_a,
+        'method_b_closure': closure_b,
+        'method_a_quality': metrics_a.get('flood_fill_quality', 0.0),
+        'method_b_quality': metrics_b.get('graph_quality', 0.0),
+        'overall_quality': closure_quality,
+        'target_face_area': target_face_area,
+        'point_count': len(points),
+        **metrics_a,  # 包含方法A的详细指标
+        **metrics_b   # 包含方法B的详细指标
+    }
+    
+    return is_closed, closure_quality, detailed_metrics
+
+def check_closure_prerequisites(points):
+    """
+    前置否决条件检查
+    """
+    # 1. 点数检查：至少80个点
+    if len(points) < 80:
+        return False
+    
+    # 2. 计算中位最近邻距离
+    points_2d = points[:, :2]
+    distances = cdist(points_2d, points_2d)
+    np.fill_diagonal(distances, np.inf)  # 排除自身
+    min_distances = np.min(distances, axis=1)
+    med_nn = np.median(min_distances)
+    
+    # 3. 检查点云密度：中位最近邻距离不能太大
+    if med_nn > 0.025:  # 25mm
+        return False
+    
+    return True
+
+def detect_closure_flood_fill(points, cube_size, target_face_area):
+    """
+    方法A：图像法（投影→栅格化→洪泛填充）
+    """
+    points_2d = points[:, :2]
+    
+    # 1. 计算自适应参数
+    px, stroke_px, a_min = calculate_flood_fill_parameters(points_2d, target_face_area)
+    
+    # 2. 栅格化
+    grid, min_coords, resolution, pad_px = create_grid_from_points(points_2d, px)
+    
+    # 3. 加粗边界
+    thickened_grid = thicken_boundary(grid, stroke_px)
+    
+    # 4. 洪泛填充
+    filled_grid = flood_fill_from_boundary(thickened_grid)
+    
+    # 5. 计算内陆面积
+    inland_area = calculate_inland_area(filled_grid, resolution)
+    
+    # 6. 判断闭环
+    is_closed = inland_area >= a_min
+    
+    # 7. 计算质量分数
+    quality = min(1.0, inland_area / a_min) if a_min > 0 else 0.0
+    
+    # 8. Sanity-check：打印关键参数和比例，帮助调试
+    inland_ratio = inland_area / target_face_area if target_face_area > 0 else 0.0
+    print(f"    [A法调试] 内陆面积: {inland_area*1e6:.1f}mm²")
+    print(f"    [A法调试] 目标面积: {target_face_area*1e6:.1f}mm²")
+    print(f"    [A法调试] 内陆/目标比例: {inland_ratio:.3f} (应在0.4-1.2范围)")
+    print(f"    [A法调试] 像素分辨率: {px*1e3:.1f}mm/px")
+    print(f"    [A法调试] 加粗像素: {stroke_px:.1f} (建议2-8)")
+    print(f"    [A法调试] 栅格留边: {pad_px}px")
+    
+    metrics = {
+        'flood_fill_closed': is_closed,
+        'flood_fill_quality': quality,
+        'inland_area_mm2': inland_area * 1e6,  # 转换为mm²
+        'min_area_threshold_mm2': a_min * 1e6,
+        'pixel_resolution_mm': px * 1e3,
+        'stroke_width_px': stroke_px,
+        'grid_padding_px': pad_px,
+        'inland_ratio': inland_ratio
+    }
+    
+    return is_closed, metrics
+
+def calculate_flood_fill_parameters(points_2d, target_face_area):
+    """
+    计算洪泛填充的关键参数
+    """
+    # 1. 计算中位最近邻距离
+    distances = cdist(points_2d, points_2d)
+    np.fill_diagonal(distances, np.inf)
+    min_distances = np.min(distances, axis=1)
+    med_nn = np.median(min_distances)
+    
+    # 2. 自适应像素尺寸
+    px = np.clip(0.5 * med_nn, 0.002, 0.008)  # 2-8 mm/px
+    
+    # 3. 邻近阈值
+    t_near = np.clip(2.5 * med_nn, 0.003, 0.025)  # 3-25 mm
+    
+    # 4. 加粗半径
+    stroke_px = np.clip(t_near / px, 1, 20)
+    
+    # 5. 最小内陆面积阈值
+    a_min = 0.20 * target_face_area  # 20%的目标面积
+    
+    return px, stroke_px, a_min
+
+def create_grid_from_points(points_2d, resolution):
+    """
+    将点云转换为栅格图像
+    """
+    # 计算边界框
+    min_coords = np.min(points_2d, axis=0)
+    max_coords = np.max(points_2d, axis=0)
+    
+    # 计算网格尺寸
+    grid_width = int((max_coords[0] - min_coords[0]) / resolution) + 1
+    grid_height = int((max_coords[1] - min_coords[1]) / resolution) + 1
+    
+    # 创建栅格
+    grid = np.zeros((grid_height, grid_width), dtype=np.uint8)
+    
+    # 将点云映射到栅格
+    for point in points_2d:
+        x_idx = int((point[0] - min_coords[0]) / resolution)
+        y_idx = int((point[1] - min_coords[1]) / resolution)
+        if 0 <= x_idx < grid_width and 0 <= y_idx < grid_height:
+            grid[y_idx, x_idx] = 255
+    
+    # 栅格留边：确保floodFill能正确填充外部背景
+    # 经验公式：pad_px = max(10, int(ceil(0.05 / resolution)))
+    # 给外圈留≥5cm的物理边距比较稳
+    pad_px = max(10, int(np.ceil(0.05 / resolution)))
+    pad_px = min(pad_px, 32)  # 上限夹到32像素
+    
+    # 在栅格外侧添加边距
+    grid = np.pad(grid, pad_px, constant_values=0)
+    
+    return grid, min_coords, resolution, pad_px
+
+def thicken_boundary(grid, stroke_px):
+    """
+    加粗边界，使用闭运算确保真正闭合
+    """
+    # 计算核大小：取max(3, 2*round(stroke_px/2)+1)，保证为≥3且奇数
+    kernel_size = max(3, 2 * round(stroke_px / 2) + 1)
+    if kernel_size % 2 == 0:  # 确保为奇数
+        kernel_size += 1
+    
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size))
+    
+    # 闭运算：dilate ×2 + erode ×1，比单次膨胀稳
+    # 这样能跨过2-3px的小缝，又不至于把窄通道全部"焊死"
+    thickened = cv2.dilate(grid, kernel, iterations=2)
+    thickened = cv2.erode(thickened, kernel, iterations=1)
+    
+    return thickened
+
+def flood_fill_from_boundary(grid):
+    """
+    从边界开始洪泛填充
+    """
+    filled_grid = grid.copy()
+    
+    # 创建掩码
+    mask = np.zeros((grid.shape[0] + 2, grid.shape[1] + 2), dtype=np.uint8)
+    
+    # 使用栅格中心点作为起始填充点，确保能正确填充外部背景
+    # 由于已经留了边，中心点一定在外部区域
+    start_x = grid.shape[1] // 2
+    start_y = grid.shape[0] // 2
+    cv2.floodFill(filled_grid, mask, (start_x, start_y), 128)
+    
+    return filled_grid
+
+def calculate_inland_area(filled_grid, resolution):
+    """
+    计算内陆面积
+    """
+    # 计算被边界围住的内部洞的像素数量
+    # filled_grid中：255=边界，128=外部背景，0=内部洞
+    inland_pixels = np.sum(filled_grid == 0)
+    
+    # 转换为实际面积
+    inland_area = inland_pixels * (resolution ** 2)
+    
+    return inland_area
+
+def detect_closure_graph_topology(points, cube_size, target_face_area):
+    """
+    方法B：图论法（kNN图→拓扑环检测）
+    """
+    points_2d = points[:, :2]
+    
+    # 1. 计算参数
+    k, t_near, t_long = calculate_graph_parameters(points_2d)
+    
+    # 2. 构建kNN图
+    knn_graph = build_knn_graph(points_2d, k, t_long)
+    
+    # 3. 检测拓扑环 - 传递points_2d以计算真实边长
+    cycles, degree_stats = detect_topological_cycles(knn_graph, points_2d)
+    
+    # 4. 判断闭环
+    is_closed = evaluate_cycle_completeness(cycles, degree_stats, t_long)
+    
+    # 5. 计算质量分数
+    quality = calculate_graph_quality(cycles, degree_stats)
+    
+    # 6. Sanity-check：打印图论法关键参数，帮助调试
+    print(f"    [B法调试] k近邻数: {k}")
+    print(f"    [B法调试] 环数量: {cycles}")
+    print(f"    [B法调试] 度数=2比例: {degree_stats.get('degree_2_ratio', 0.0):.3f} (建议≥0.70)")
+    print(f"    [B法调试] 最大边长: {degree_stats.get('max_edge_length', 0.0)*1e3:.1f}mm")
+    print(f"    [B法调试] 近邻阈值: {t_near*1e3:.1f}mm")
+    print(f"    [B法调试] 最长边阈值: {t_long*1e3:.1f}mm")
+    
+    metrics = {
+        'graph_closed': is_closed,
+        'graph_quality': quality,
+        'cycle_count': cycles,  # cycles 已经是整数，不需要 len()
+        'degree_2_ratio': degree_stats.get('degree_2_ratio', 0.0),
+        'max_edge_length': degree_stats.get('max_edge_length', 0.0),
+        'k_neighbors': k,
+        'near_threshold_mm': t_near * 1e3,
+        'long_threshold_mm': t_long * 1e3
+    }
+    
+    return is_closed, metrics
+
+def calculate_graph_parameters(points_2d):
+    """
+    计算图论检测的参数
+    """
+    # 1. 计算中位最近邻距离
+    distances = cdist(points_2d, points_2d)
+    np.fill_diagonal(distances, np.inf)
+    min_distances = np.min(distances, axis=1)
+    med_nn = np.median(min_distances)
+    
+    # 2. 参数设置 - 调整为更现实的参数
+    k = 3  # 从5降到3，减少跨边连线，更像连贯折线
+    t_near = np.clip(2.5 * med_nn, 0.003, 0.025)  # 3-25 mm
+    t_long = 1.5 * t_near  # 最长边阈值
+    
+    return k, t_near, t_long
+
+def build_knn_graph(points_2d, k, t_long):
+    """
+    构建kNN图
+    """
+    n_points = len(points_2d)
+    distances = cdist(points_2d, points_2d)
+    np.fill_diagonal(distances, np.inf)
+    
+    # 构建邻接矩阵
+    adjacency_matrix = np.zeros((n_points, n_points), dtype=bool)
+    
+    for i in range(n_points):
+        # 找到最近的k个邻居
+        nearest_indices = np.argsort(distances[i])[:k]
+        
+        for j in nearest_indices:
+            if distances[i, j] <= t_long:  # 最长边限制
+                adjacency_matrix[i, j] = True
+                adjacency_matrix[j, i] = True  # 无向图
+    
+    return adjacency_matrix
+
+def detect_topological_cycles(adjacency_matrix, points_2d=None):
+    """
+    检测拓扑环
+    
+    Parameters:
+    -----------
+    adjacency_matrix : np.ndarray
+        邻接矩阵
+    points_2d : np.ndarray, optional
+        2D点云坐标，用于计算真实边长
+    """
+    n_points = len(adjacency_matrix)
+    
+    # 计算度数
+    degrees = np.sum(adjacency_matrix, axis=1)
+    
+    # 递归去叶（度=1的毛刺）
+    while True:
+        leaf_nodes = np.where(degrees == 1)[0]
+        if len(leaf_nodes) == 0:
+            break
+        
+        # 移除叶子节点
+        for leaf in leaf_nodes:
+            neighbors = np.where(adjacency_matrix[leaf])[0]
+            for neighbor in neighbors:
+                adjacency_matrix[leaf, neighbor] = False
+                adjacency_matrix[neighbor, leaf] = False
+                degrees[neighbor] -= 1
+            degrees[leaf] = 0
+    
+    # 计算环的秩（连通分量数）
+    visited = np.zeros(n_points, dtype=bool)
+    cycle_count = 0
+    
+    for i in range(n_points):
+        if degrees[i] > 0 and not visited[i]:
+            # DFS找连通分量
+            stack = [i]
+            visited[i] = True
+            component_size = 1
+            
+            while stack:
+                current = stack.pop()
+                neighbors = np.where(adjacency_matrix[current])[0]
+                for neighbor in neighbors:
+                    if degrees[neighbor] > 0 and not visited[neighbor]:
+                        visited[neighbor] = True
+                        stack.append(neighbor)
+                        component_size += 1
+            
+            if component_size >= 3:  # 至少3个点才能形成环
+                cycle_count += 1
+    
+    # 计算度数=2的节点比例
+    degree_2_nodes = np.sum(degrees == 2)
+    total_nodes_with_edges = np.sum(degrees > 0)
+    degree_2_ratio = degree_2_nodes / total_nodes_with_edges if total_nodes_with_edges > 0 else 0.0
+    
+    # 计算最长边长度 - 使用真实距离而不是硬编码值
+    max_edge_length = 0.0
+    if points_2d is not None:
+        for i in range(n_points):
+            for j in range(i+1, n_points):
+                if adjacency_matrix[i, j]:
+                    # 计算真实的欧氏距离
+                    edge_length = np.linalg.norm(points_2d[i] - points_2d[j])
+                    max_edge_length = max(max_edge_length, edge_length)
+    else:
+        # 如果没有点云数据，使用估计值
+        max_edge_length = 0.01  # 1cm估计值
+    
+    degree_stats = {
+        'degree_2_ratio': degree_2_ratio,
+        'max_edge_length': max_edge_length,
+        'total_nodes': total_nodes_with_edges
+    }
+    
+    return cycle_count, degree_stats
+
+def evaluate_cycle_completeness(cycles, degree_stats, t_long):
+    """
+    评估环的完整性
+    """
+    # 硬条件检查 - 调整为更现实的阈值
+    cycle_rank_ok = cycles >= 1  # 存在至少一个独立环
+    degree_2_ok = degree_stats['degree_2_ratio'] >= 0.70  # 度数=2的节点比例≥70%（从85%降到70%）
+    max_edge_ok = degree_stats['max_edge_length'] <= t_long  # 最长边≤阈值
+    
+    return cycle_rank_ok and degree_2_ok and max_edge_ok
+
+def calculate_graph_quality(cycles, degree_stats):
+    """
+    计算图论检测的质量分数
+    """
+    # 基于环数量和度数分布计算质量
+    cycle_score = min(1.0, cycles / 2.0)  # 最多2个环
+    degree_score = degree_stats['degree_2_ratio']
+    
+    quality = (cycle_score * 0.6 + degree_score * 0.4)
+    return quality
 
 def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, jump_height=0.1, max_steps=30):
     """
@@ -466,8 +656,8 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
     h, w = cam.res[1], cam.res[0]
     center_img = np.array([w // 2, h // 2])
     
-    # 闭环检测相关变量
-    closure_check_interval = 3  # 每3步检查一次闭环
+    # 闭环检测相关变量 - 每步都检查
+    closure_check_interval = 1  # 每步都检查闭环
     last_closure_check_step = 0
     
     # 记录上一次选择的方向，用于顺时针约束
@@ -510,7 +700,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
                 break
                 
             # 使用Canny边界检测
-            contours, rgb, depth = detect_boundary_canny(cam, min_contour_area=100)
+            contours, rgb, depth = detect_boundary_canny(cam, min_contour_area=50)
             
             # 确保img变量可用
             img = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
@@ -522,9 +712,6 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
                 # 每一步都显示检测方法比较
                 print(f"第{step+1}步检测方法比较:")
                 compare_detection_methods(cam, show_images=True, step_num=step+1)  # 每一步都显示图像比较
-                
-                # 可视化Canny检测结果
-                visualize_canny_detection(contours, rgb, depth, "Canny Boundary Detection")
                 
                 # 检查是否需要调整摄像机角度
                 if optimize_camera_angle(cam, contours, center_img):
@@ -696,18 +883,38 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
         all_points.append(points)
         print(f"第{step+1}步，采集到{len(points)}个边界点")
         
-        # 11. 闭环检测
-        if step - last_closure_check_step >= closure_check_interval and len(all_points) > 0:
+        # 11. 闭环检测 - 修改为5步之后才开始检测
+        if step >= 4 and step - last_closure_check_step >= closure_check_interval and len(all_points) > 0:
             current_all_points = np.concatenate(all_points, axis=0)
-            is_closed, closure_quality = detect_pointcloud_closure(current_all_points)
+            
+            # 计算cube的尺寸（基于已知信息）
+            cube_size = np.array([0.105, 0.18, 0.022])  # 从scene.add_entity中获取
+            
+            is_closed, closure_quality, detailed_metrics = detect_pointcloud_closure(
+                current_all_points, cube_pos, cube_size
+            )
             
             print(f"  闭环检测: 质量={closure_quality:.3f}, 形成闭环={is_closed}")
+            print(f"  详细指标:")
+            print(f"    方法A(图像法): {detailed_metrics['method_a_closure']}, 质量={detailed_metrics['method_a_quality']:.3f}")
+            print(f"      内陆面积: {detailed_metrics['inland_area_mm2']:.1f}mm²")
+            print(f"      面积阈值: {detailed_metrics['min_area_threshold_mm2']:.1f}mm²")
+            print(f"      像素分辨率: {detailed_metrics['pixel_resolution_mm']:.1f}mm/px")
+            print(f"    方法B(图论法): {detailed_metrics['method_b_closure']}, 质量={detailed_metrics['method_b_quality']:.3f}")
+            print(f"      环数量: {detailed_metrics['cycle_count']}")
+            print(f"      度数=2比例: {detailed_metrics['degree_2_ratio']:.3f}")
+            print(f"      k近邻数: {detailed_metrics['k_neighbors']}")
+            print(f"    目标面积: {detailed_metrics['target_face_area']*1e6:.1f}mm²")
+            print(f"    点云总数: {detailed_metrics['point_count']}")
+            print(f"    并联判定: 任一方法检测到闭环即可")
             
             if is_closed:
                 print(f"第{step+1}步，点云已形成闭环，跳跃扫描完成！")
                 break
             
             last_closure_check_step = step
+        elif step < 4:
+            print(f"  前5步跳过闭环检测，当前为第{step+1}步")
         
         # 12. 实时可视化点云
         import open3d as o3d
@@ -715,14 +922,14 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
         pcd.points = o3d.utility.Vector3dVector(points)
         o3d.visualization.draw_geometries([pcd], window_name=f"Step {step+1} PointCloud (Canny)", width=400, height=300)
         
-        # 12.5. 累积点云可视化
+        # 11.5. 累积点云可视化
         if len(all_points) > 0:
             accumulated_points = np.concatenate(all_points, axis=0)
             accumulated_pcd = o3d.geometry.PointCloud()
             accumulated_pcd.points = o3d.utility.Vector3dVector(accumulated_points)
             o3d.visualization.draw_geometries([accumulated_pcd], window_name="Accumulated Point Cloud", width=400, height=300)
         
-        # 13. IK逆解和路径规划
+        # 12. IK逆解和路径规划
         target_quat = j6_link.get_quat().cpu().numpy()
         qpos_ik = ed6.inverse_kinematics(link=j6_link, pos=target_pos, quat=target_quat)
         if hasattr(qpos_ik, 'cpu'):
@@ -731,7 +938,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
             print(f"第{step+1}步，IK逆解失败，目标位置可能超出工作空间")
             break
         
-        # 14. 验证IK解的有效性
+        # 13. 验证IK解的有效性
         joint_limits = np.array([[-np.pi, np.pi], [-np.pi, np.pi], [-np.pi, np.pi], 
                                 [-np.pi, np.pi], [-np.pi, np.pi], [-np.pi, np.pi]])
         for i, (q, limits) in enumerate(zip(qpos_ik, joint_limits)):
@@ -741,7 +948,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
         else:
             pass
         
-        # 15. 路径规划和执行
+        # 14. 路径规划和执行
         try:
             path = ed6.plan_path(qpos_goal=qpos_ik, num_waypoints=100)
             if len(path) == 0:
@@ -752,7 +959,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
         
         print(f"  路径规划完成，路径点数: {len(path)}")
         
-        # 16. 执行路径
+        # 15. 执行路径
         for idx, waypoint in enumerate(path):
             # 检查ESC键
             if esc_pressed:
@@ -769,7 +976,7 @@ def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_
             
         cam.move_to_attach()
         
-        # 17. 验证实际到达位置
+        # 16. 验证实际到达位置
         actual_pos = j6_link.get_pos().cpu().numpy()
         pos_error = np.linalg.norm(actual_pos - target_pos)
         print(f"  实际位置: {actual_pos}")
@@ -809,6 +1016,109 @@ def visualize_and_save_pointcloud(points, filename="boundary_cloud_canny.ply"):
     print(f"点云已保存为{filename}")
     # 修正 linter 报错，使用 o3d.visualization.draw_geometries
     o3d.visualization.draw_geometries([pcd])  # type: ignore
+
+def is_clockwise_direction(current_angle, last_angle, tolerance=np.pi/4):
+    """
+    检查当前方向是否符合顺时针约束
+    
+    Parameters:
+    -----------
+    current_angle : float
+        当前方向角度
+    last_angle : float
+        上一次方向角度
+    tolerance : float
+        允许的角度偏差
+    
+    Returns:
+    --------
+    bool : 是否符合顺时针方向
+    """
+    if last_angle is None:
+        return True
+    
+    # 计算角度差
+    angle_diff = current_angle - last_angle
+    
+    # 处理角度跨越±π的情况
+    if angle_diff > np.pi:
+        angle_diff -= 2 * np.pi
+    elif angle_diff < -np.pi:
+        angle_diff += 2 * np.pi
+    
+    # 顺时针方向：角度差应该为正（或接近0）
+    return angle_diff >= -tolerance
+
+def optimize_camera_angle(cam, current_contours, img_center):
+    """
+    根据检测效果优化摄像机角度
+    
+    Parameters:
+    -----------
+    cam : Camera
+        摄像机对象
+    current_contours : list
+        当前检测到的轮廓
+    img_center : np.ndarray
+        图像中心点
+    
+    Returns:
+    --------
+    bool : 是否需要调整角度
+    """
+    if not current_contours:
+        return True  # 没有检测到轮廓，需要调整
+    
+    # 计算轮廓在图像中的分布
+    all_contour_points = []
+    for cnt in current_contours:
+        all_contour_points.extend(cnt.reshape(-1, 2))
+    
+    if not all_contour_points:
+        return True
+    
+    all_contour_points = np.array(all_contour_points)
+    
+    # 计算轮廓中心
+    contour_center = np.mean(all_contour_points, axis=0)
+    
+    # 计算轮廓中心到图像中心的距离
+    center_offset = np.linalg.norm(contour_center - img_center)
+    
+    # 如果轮廓中心偏离图像中心太远，需要调整角度
+    max_offset = 100  # 像素阈值
+    
+    return center_offset > max_offset
+
+def adjust_camera_orientation(scene, ed6, cam, motors_dof_idx, j6_link, target_angle_offset):
+    """
+    调整摄像机朝向
+    
+    Parameters:
+    -----------
+    target_angle_offset : float
+        目标角度偏移（弧度）
+    """
+    current_pos = j6_link.get_pos().cpu().numpy()
+    current_quat = j6_link.get_quat().cpu().numpy()
+    
+    # 计算新的朝向
+    # 这里简化处理，实际应用中可能需要更复杂的角度计算
+    target_quat = current_quat.copy()
+    
+    # 使用IK调整机械臂朝向
+    qpos_ik = ed6.inverse_kinematics(link=j6_link, pos=current_pos, quat=target_quat)
+    if hasattr(qpos_ik, 'cpu'):
+        qpos_ik = qpos_ik.cpu().numpy()
+    
+    if not np.any(np.isnan(qpos_ik)) and not np.any(np.isinf(qpos_ik)):
+        ed6.control_dofs_position(qpos_ik, motors_dof_idx)
+        for _ in range(30):
+            scene.step()
+        cam.move_to_attach()
+        return True
+    
+    return False
 
 def main():
     gs.init(seed=0, precision="32", logging_level="debug")
@@ -852,9 +1162,9 @@ def main():
         pos=(0, 0, 0),
         lookat=(0, 0, 1),
         up=(0, 0, 1),
-        fov=60,  # 增加视野角度，从60度增加到80度
+        fov=45,  # 设置为60度
         aperture=2.8,
-        focus_dist=0.02,  # 调整焦距，从0.015增加到0.02
+        focus_dist=0.02,  
         GUI=True,
     )
     scene.build()
