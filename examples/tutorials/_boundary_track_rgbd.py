@@ -1643,7 +1643,7 @@ def main():
         pos=(0, 0, 0),
         lookat=(0, 0, 1),
         up=(0, 0, 1),
-        fov=45, 
+        fov=60, 
         aperture=2.8,
         focus_dist=0.02,  
         GUI=True,
