@@ -1148,7 +1148,14 @@ def main():
     )
     plane = scene.add_entity(gs.morphs.Plane(collision=True))
 
-    cube = scene.add_entity(gs.morphs.Box(size=(0.105, 0.18, 0.022), pos=(0.35, 0, 0.02), collision=True))
+    # cube = scene.add_entity(gs.morphs.Box(size=(0.105, 0.18, 0.022), pos=(0.35, 0, 0.02), collision=True))
+    cube = scene.add_entity(gs.morphs.Mesh(
+        file="genesis/assets/_myobj/ctry.obj",
+        pos=(0.35, 0.0, 0.02),
+        collision=True,
+        
+        fixed=True,
+    ))
 
     ed6 = scene.add_entity(gs.morphs.URDF(
         file="genesis/assets/xml/ED6-URDF-0102.SLDASM/urdf/ED6-URDF-0102.SLDASM.urdf",
@@ -1162,7 +1169,7 @@ def main():
         pos=(0, 0, 0),
         lookat=(0, 0, 1),
         up=(0, 0, 1),
-        fov=60,  # 设置为60度
+        fov=65,  # 设置为60度
         aperture=2.8,
         focus_dist=0.02,  
         GUI=True,
@@ -1180,7 +1187,7 @@ def main():
     reset_arm(scene, ed6, motors_dof_idx)
     
     # 直接给定目标点（替代环视检测）
-    cube_pos = np.array([0.35, 0, 0.02])  # 直接设置目标位置
+    cube_pos = np.array([0.35, -0.05, 0.02])  # 直接设置目标位置
     print(f"直接设置目标位置: {cube_pos}")
     
     # 机械臂移动到目标位置

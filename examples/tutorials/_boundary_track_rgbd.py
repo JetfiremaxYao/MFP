@@ -1160,14 +1160,14 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
     # 2. RGB-D边界检测
     contours_rgbd, _, _ = detect_boundary_rgbd(cam)
     
-    # 3. 高级RGB-D边界检测
-    contours_advanced, _, _ = detect_boundary_advanced_rgbd(cam)
-    
+    # # 3. 高级RGB-D边界检测
+    # contours_advanced, _, _ = detect_boundary_advanced_rgbd(cam)
+       
     # 显示轮廓数量比较
     step_info = f" (Step {step_num})" if step_num is not None else ""
     print(f"  Canny{step_info}: {len(contours_canny)} 个轮廓")
     print(f"  RGB-D{step_info}: {len(contours_rgbd)} 个轮廓")
-    print(f"  高级RGB-D{step_info}: {len(contours_advanced)} 个轮廓")
+    # print(f"  高级RGB-D{step_info}: {len(contours_advanced)} 个轮廓")
     
     # 只在需要时显示图像
     if show_images:
@@ -1185,10 +1185,10 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
         cv2.drawContours(rgbd_vis, contours_rgbd, -1, (0, 0, 255), 2)
         comparison[:, w:w*2] = rgbd_vis
         
-        # 高级RGB-D结果
-        advanced_vis = img.copy()
-        cv2.drawContours(advanced_vis, contours_advanced, -1, (255, 0, 0), 2)
-        comparison[:, w*2:] = advanced_vis
+        # # 高级RGB-D结果
+        # advanced_vis = img.copy()
+        # cv2.drawContours(advanced_vis, contours_advanced, -1, (255, 0, 0), 2)
+        # comparison[:, w*2:] = advanced_vis
         
         # 添加标签
         step_title = f"Step {step_num} - " if step_num is not None else ""
@@ -1198,8 +1198,8 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
         cv2.putText(comparison, f"{step_title}RGB-D", (w+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
         cv2.putText(comparison, f"Contours: {len(contours_rgbd)}", (w+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
-        cv2.putText(comparison, f"{step_title}Advanced RGB-D", (w*2+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
-        cv2.putText(comparison, f"Contours: {len(contours_advanced)}", (w*2+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        # cv2.putText(comparison, f"{step_title}Advanced RGB-D", (w*2+10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        # cv2.putText(comparison, f"Contours: {len(contours_advanced)}", (w*2+10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         
         # 使用固定的窗口名称，确保每次都更新同一个窗口
         window_name = "Detection Methods Comparison"
@@ -1211,7 +1211,8 @@ def compare_detection_methods(cam, show_images=False, step_num=None):
         cv2.imshow(window_name, comparison)
         cv2.waitKey(100)  # 减少等待时间，让界面更流畅
     
-    return contours_canny, contours_rgbd, contours_advanced
+    # return contours_canny, contours_rgbd, contours_advanced
+    return contours_canny, contours_rgbd
 
 def track_and_scan_boundary_jump(scene, ed6, cam, motors_dof_idx, j6_link, cube_pos, jump_height=0.1, max_steps=30):
     """
@@ -1629,7 +1630,13 @@ def main():
     )
     plane = scene.add_entity(gs.morphs.Plane(collision=True))
 
-    cube = scene.add_entity(gs.morphs.Box(size=(0.105, 0.18, 0.022), pos=(0.35, 0, 0.02), collision=True))
+    # 使用统一的测试物体 - ctry.obj
+    cube = scene.add_entity(gs.morphs.Mesh(
+        file="genesis/assets/_myobj/ctry.obj",
+        pos=(0.35, 0.0, 0.02),
+        collision=True,
+        fixed=True,
+    ))
 
     ed6 = scene.add_entity(gs.morphs.URDF(
         file="genesis/assets/xml/ED6-URDF-0102.SLDASM/urdf/ED6-URDF-0102.SLDASM.urdf",
