@@ -1,0 +1,126 @@
+PERFORMANCE RANKING
+==================================================
+
+ 1. RGBD   - Cube       - normal   - Score: 0.726
+ 2. RGBD   - Cube       - dim      - Score: 0.719
+ 3. RGBD   - Cube       - bright   - Score: 0.705
+ 4. CANNY  - Cube       - dim      - Score: 0.695
+ 5. CANNY  - Cube       - bright   - Score: 0.691
+ 6. CANNY  - Cube       - normal   - Score: 0.690
+ 7. RGBD   - ctry.obj   - bright   - Score: 0.526
+ 8. RGBD   - ctry.obj   - dim      - Score: 0.522
+ 9. RGBD   - ctry.obj   - normal   - Score: 0.515
+10. CANNY  - ctry.obj   - normal   - Score: 0.502
+11. CANNY  - ctry.obj   - bright   - Score: 0.492
+12. CANNY  - ctry.obj   - dim      - Score: 0.199
+
+SCORE BREAKDOWN:
+------------------------------
+
+RGBD - Cube - normal:
+  Chamfer Distance (mm): 0.896
+  Hausdorff Distance (mm): 0.856
+  Standard Residual (mm): 0.874
+  Coefficient of Variation: 0.400
+  Execution Time (s): 0.423
+  Point Count: 0.644
+  Overall Score: 0.726
+
+RGBD - Cube - dim:
+  Chamfer Distance (mm): 0.877
+  Hausdorff Distance (mm): 0.845
+  Standard Residual (mm): 0.873
+  Coefficient of Variation: 0.420
+  Execution Time (s): 0.535
+  Point Count: 0.519
+  Overall Score: 0.719
+
+RGBD - Cube - bright:
+  Chamfer Distance (mm): 0.885
+  Hausdorff Distance (mm): 0.833
+  Standard Residual (mm): 0.857
+  Coefficient of Variation: 0.338
+  Execution Time (s): 0.420
+  Point Count: 0.615
+  Overall Score: 0.705
+
+CANNY - Cube - dim:
+  Chamfer Distance (mm): 0.947
+  Hausdorff Distance (mm): 0.864
+  Standard Residual (mm): 0.879
+  Coefficient of Variation: 0.049
+  Execution Time (s): 0.660
+  Point Count: 0.329
+  Overall Score: 0.695
+
+CANNY - Cube - bright:
+  Chamfer Distance (mm): 0.951
+  Hausdorff Distance (mm): 0.862
+  Standard Residual (mm): 0.891
+  Coefficient of Variation: 0.000
+  Execution Time (s): 0.658
+  Point Count: 0.326
+  Overall Score: 0.691
+
+CANNY - Cube - normal:
+  Chamfer Distance (mm): 0.945
+  Hausdorff Distance (mm): 0.854
+  Standard Residual (mm): 0.880
+  Coefficient of Variation: 0.007
+  Execution Time (s): 0.681
+  Point Count: 0.320
+  Overall Score: 0.690
+
+RGBD - ctry.obj - bright:
+  Chamfer Distance (mm): 0.481
+  Hausdorff Distance (mm): 0.488
+  Standard Residual (mm): 0.588
+  Coefficient of Variation: 0.605
+  Execution Time (s): 0.066
+  Point Count: 1.000
+  Overall Score: 0.526
+
+RGBD - ctry.obj - dim:
+  Chamfer Distance (mm): 0.473
+  Hausdorff Distance (mm): 0.499
+  Standard Residual (mm): 0.604
+  Coefficient of Variation: 0.619
+  Execution Time (s): 0.088
+  Point Count: 0.920
+  Overall Score: 0.522
+
+RGBD - ctry.obj - normal:
+  Chamfer Distance (mm): 0.472
+  Hausdorff Distance (mm): 0.499
+  Standard Residual (mm): 0.589
+  Coefficient of Variation: 0.604
+  Execution Time (s): 0.000
+  Point Count: 0.989
+  Overall Score: 0.515
+
+CANNY - ctry.obj - normal:
+  Chamfer Distance (mm): 0.429
+  Hausdorff Distance (mm): 0.513
+  Standard Residual (mm): 0.597
+  Coefficient of Variation: 0.590
+  Execution Time (s): 0.432
+  Point Count: 0.527
+  Overall Score: 0.502
+
+CANNY - ctry.obj - bright:
+  Chamfer Distance (mm): 0.401
+  Hausdorff Distance (mm): 0.492
+  Standard Residual (mm): 0.586
+  Coefficient of Variation: 0.618
+  Execution Time (s): 0.654
+  Point Count: 0.306
+  Overall Score: 0.492
+
+CANNY - ctry.obj - dim:
+  Chamfer Distance (mm): 0.000
+  Hausdorff Distance (mm): 0.000
+  Standard Residual (mm): 0.000
+  Coefficient of Variation: 0.560
+  Execution Time (s): 0.460
+  Point Count: 0.495
+  Overall Score: 0.199

@@ -1,0 +1,4 @@
+可视化失败: Axes.scatter() got multiple values for argument 's'
+点云数量: 7140
+方法: rgbd
+运行ID: 0

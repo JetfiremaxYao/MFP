@@ -1,0 +1,14 @@
+{
+  "experiment_name": "final_object_detection",
+  "timestamp": "2025-09-12T01:48:41.368647",
+  "n_trials_per_condition": 5,
+  "lighting_conditions": [
+    "normal",
+    "bright",
+    "dim"
+  ],
+  "object_types": [
+    "cube"
+  ],
+  "total_trials": 30
+}

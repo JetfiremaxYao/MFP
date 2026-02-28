@@ -1,0 +1,17 @@
+[
+  {
+    "position": [
+      0.352138298892094,
+      0.006349409254250346,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 1,
+    "confidence": 0.00365434428598332,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df1\uff0c\u9ad8\u5ea6\u5dee48.6mm",
+    "anomaly_id": 1,
+    "strength": 0.0365434428598332,
+    "height_elevation": 0.048643317332874886,
+    "area_mm2": 4748.613621309066
+  }
+]

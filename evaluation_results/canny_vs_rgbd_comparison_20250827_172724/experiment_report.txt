@@ -1,0 +1,125 @@
+边界追踪算法对比实验报告
+==================================================
+
+实验名称: canny_vs_rgbd_comparison
+实验时间: 2025-08-27T17:27:24.782904
+重复次数: 3
+
+实验配置:
+  盒子尺寸: [0.105 0.18  0.022]
+  基础位置: [0.35 0.08 0.02]
+  位置扰动: ±0.02m
+  高度扰动: ±0.005m
+  光照条件: ['normal', 'bright', 'dim']
+  背景条件: ['simple']
+
+硬件信息:
+  platform: macOS-15.6.1-arm64-arm-64bit
+  python_version: 3.10.18
+  cpu_count: 12
+  memory_gb: 24.0
+  genesis_version: 0.2.1
+
+详细结果:
+
+NORMAL 光照环境:
+  CANNY方法:
+    运行 1: Success
+      点数: 3874
+      执行时间: 32.22s
+      Chamfer距离: 2.95mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 4231
+      执行时间: 11.94s
+      Chamfer距离: 2.82mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 3018
+      执行时间: 9.47s
+      Chamfer距离: 3.77mm
+      3mm覆盖率: 1.000
+  RGBD方法:
+    运行 1: Success
+      点数: 8216
+      执行时间: 179.12s
+      Chamfer距离: 6.63mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 6006
+      执行时间: 75.47s
+      Chamfer距离: 4.93mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 8202
+      执行时间: 18.68s
+      Chamfer距离: 6.65mm
+      3mm覆盖率: 1.000
+
+BRIGHT 光照环境:
+  CANNY方法:
+    运行 1: Success
+      点数: 3857
+      执行时间: 17.25s
+      Chamfer距离: 2.72mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 3273
+      执行时间: 22.31s
+      Chamfer距离: 2.39mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 4201
+      执行时间: 536.95s
+      Chamfer距离: 3.37mm
+      3mm覆盖率: 1.000
+  RGBD方法:
+    运行 1: Success
+      点数: 6995
+      执行时间: 30.52s
+      Chamfer距离: 5.47mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 7434
+      执行时间: 52.87s
+      Chamfer距离: 9.15mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 6969
+      执行时间: 61.20s
+      Chamfer距离: 5.45mm
+      3mm覆盖率: 1.000
+
+DIM 光照环境:
+  CANNY方法:
+    运行 1: Success
+      点数: 3840
+      执行时间: 702.03s
+      Chamfer距离: 3.61mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 4346
+      执行时间: 9.73s
+      Chamfer距离: 3.44mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 3249
+      执行时间: 42.16s
+      Chamfer距离: 2.29mm
+      3mm覆盖率: 1.000
+  RGBD方法:
+    运行 1: Success
+      点数: 4433
+      执行时间: 14.57s
+      Chamfer距离: 10.37mm
+      3mm覆盖率: 1.000
+    运行 2: Success
+      点数: 7112
+      执行时间: 12.30s
+      Chamfer距离: 5.72mm
+      3mm覆盖率: 1.000
+    运行 3: Success
+      点数: 6500
+      执行时间: 14.85s
+      Chamfer距离: 5.44mm
+      3mm覆盖率: 1.000

@@ -1,0 +1,62 @@
+[
+  {
+    "position": [
+      0.4173726789221397,
+      -0.030797526879907763,
+      0.06551605708805112
+    ],
+    "type": "anomaly",
+    "priority": 1,
+    "confidence": 0.95,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df1\uff0c\u9ad8\u5ea6\u5dee45.6mm\uff0c\u89e6\u8bca\u6700\u9ad8\u70b9",
+    "anomaly_id": 2,
+    "strength": 0.03982297547289083,
+    "height_elevation": 0.045563006979437756,
+    "area_mm2": 1202.9821173983025
+  },
+  {
+    "position": [
+      0.3530565060890496,
+      -0.06295561329645272,
+      0.06572231089187829
+    ],
+    "type": "anomaly",
+    "priority": 2,
+    "confidence": 0.95,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df2\uff0c\u9ad8\u5ea6\u5dee45.7mm\uff0c\u89e6\u8bca\u6700\u9ad8\u70b9",
+    "anomaly_id": 1,
+    "strength": 0.03932670350243865,
+    "height_elevation": 0.04571709413317626,
+    "area_mm2": 928.6177748337774
+  },
+  {
+    "position": [
+      0.412778666576919,
+      0.03811265829840285,
+      0.06869207632710049
+    ],
+    "type": "anomaly",
+    "priority": 3,
+    "confidence": 0.95,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df3\uff0c\u9ad8\u5ea6\u5dee48.7mm\uff0c\u89e6\u8bca\u6700\u9ad8\u70b9",
+    "anomaly_id": 4,
+    "strength": 0.0388336504609249,
+    "height_elevation": 0.04874817344785592,
+    "area_mm2": 2764.7483750732913
+  },
+  {
+    "position": [
+      0.2749582962202973,
+      -0.021609502189466348,
+      0.05837304401341099
+    ],
+    "type": "anomaly",
+    "priority": 4,
+    "confidence": 0.95,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df4\uff0c\u9ad8\u5ea6\u5dee29.7mm\uff0c\u89e6\u8bca\u6700\u9ad8\u70b9",
+    "anomaly_id": 3,
+    "strength": 0.03340682750098225,
+    "height_elevation": 0.02974380214068955,
+    "area_mm2": 168.83959542432316
+  }
+]

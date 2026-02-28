@@ -1,0 +1,42 @@
+[
+  {
+    "position": [
+      0.30559941212448655,
+      0.08541681253992378,
+      0.19816284181437419
+    ],
+    "type": "highest_point",
+    "priority": 1,
+    "confidence": 0.95,
+    "reason": "\u8868\u9762\u6700\u9ad8\u70b9\uff0c\u9ad8\u5ea6=0.0482m\uff0c\u8d85\u51fa\u5747\u503c39.7mm",
+    "height": 0.04816284181437419,
+    "height_above_mean": 0.039719714042015,
+    "relative_height": 2.4368476341731524
+  },
+  {
+    "position": [
+      0.2964708255580081,
+      0.09039019684908242,
+      0.19495535889857163
+    ],
+    "type": "high_point",
+    "priority": 2,
+    "confidence": 0.6,
+    "reason": "\u7b2c2\u9ad8\u70b9\uff0c\u9ad8\u5ea6=0.0450m\uff0c\u8d85\u51fa\u5747\u503c36.5mm",
+    "height": 0.044955358898571635,
+    "height_above_mean": 0.03651223112621244
+  },
+  {
+    "position": [
+      0.3397845646610965,
+      0.03970854479052371,
+      0.1946348711036839
+    ],
+    "type": "high_point",
+    "priority": 3,
+    "confidence": 0.6,
+    "reason": "\u7b2c3\u9ad8\u70b9\uff0c\u9ad8\u5ea6=0.0446m\uff0c\u8d85\u51fa\u5747\u503c36.2mm",
+    "height": 0.044634871103683915,
+    "height_above_mean": 0.03619174333132472
+  }
+]

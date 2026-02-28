@@ -1,0 +1,47 @@
+[
+  {
+    "position": [
+      0.3267667988328824,
+      0.04193082584261165,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 1,
+    "confidence": 0.0037939744818680926,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df1\uff0c\u9ad8\u5ea6\u5dee49.2mm",
+    "anomaly_id": 3,
+    "strength": 0.037939744818680926,
+    "height_elevation": 0.04917996249469123,
+    "area_mm2": 2925.99671334653
+  },
+  {
+    "position": [
+      0.4005279279888479,
+      -0.0370379871137976,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 2,
+    "confidence": 0.0036847352964078555,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df2\uff0c\u9ad8\u5ea6\u5dee46.4mm",
+    "anomaly_id": 1,
+    "strength": 0.03684735296407855,
+    "height_elevation": 0.04641412669095403,
+    "area_mm2": 1901.897863675245
+  },
+  {
+    "position": [
+      0.3123933136417215,
+      -0.06348333395252724,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 3,
+    "confidence": 0.0027800715151913855,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df3\uff0c\u9ad8\u5ea6\u5dee14.0mm",
+    "anomaly_id": 2,
+    "strength": 0.027800715151913853,
+    "height_elevation": 0.01402720688366629,
+    "area_mm2": 45.015334051485084
+  }
+]

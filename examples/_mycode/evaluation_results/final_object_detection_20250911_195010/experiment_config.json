@@ -1,0 +1,17 @@
+{
+  "experiment_name": "final_object_detection",
+  "timestamp": "2025-09-11T20:05:33.217468",
+  "n_trials_per_condition": 2,
+  "lighting_conditions": [
+    "normal",
+    "bright",
+    "dim"
+  ],
+  "object_types": [
+    "ttt_obj",
+    "ctry_obj",
+    "tuoyuan_obj",
+    "cube"
+  ],
+  "total_trials": 48
+}

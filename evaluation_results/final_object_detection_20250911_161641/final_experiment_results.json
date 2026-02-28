@@ -1,0 +1,13 @@
+{
+  "experiment_config": {
+    "n_trials_per_condition": 5,
+    "lighting_conditions": [
+      "normal",
+      "bright",
+      "dim"
+    ],
+    "object_types": [
+      {
+        "name": "ttt_obj",
+        "file": "genesis/assets/_myobj/ttt.obj",
+        "size": 

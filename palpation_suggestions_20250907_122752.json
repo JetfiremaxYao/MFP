@@ -1,0 +1,32 @@
+[
+  {
+    "position": [
+      0.3592663333630896,
+      0.01075513899132489,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 1,
+    "confidence": 0.003522254516543711,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df1\uff0c\u9ad8\u5ea6\u5dee47.9mm",
+    "anomaly_id": 1,
+    "strength": 0.03522254516543711,
+    "height_elevation": 0.04787464391451614,
+    "area_mm2": 4823.988440694924
+  },
+  {
+    "position": [
+      0.2734582105565517,
+      -0.026344147565663157,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 2,
+    "confidence": 0.0031483322529676666,
+    "reason": "\u68c0\u6d4b\u5230\u5f02\u5e38\u533a\u57df2\uff0c\u9ad8\u5ea6\u5dee32.4mm",
+    "anomaly_id": 2,
+    "strength": 0.031483322529676665,
+    "height_elevation": 0.03242130286251369,
+    "area_mm2": 150.74963877171638
+  }
+]

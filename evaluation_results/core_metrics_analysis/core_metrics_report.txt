@@ -1,0 +1,166 @@
+================================================================================
+CORE METRICS ANALYSIS REPORT
+================================================================================
+
+OVERALL SUMMARY:
+----------------------------------------
+Chamfer Distance (mm):
+  Mean: 20.610
+  Std:  19.159
+  Min:  2.295
+  Max:  98.005
+  Median: 19.830
+  Count: 36
+
+Hausdorff Distance (mm):
+  Mean: 47.680
+  Std:  43.959
+  Min:  11.297
+  Max:  270.486
+  Median: 41.661
+  Count: 36
+
+Standard Residual (mm):
+  Mean: 11.185
+  Std:  12.461
+  Min:  2.450
+  Max:  78.743
+  Median: 9.812
+  Count: 36
+
+Coefficient of Variation:
+  Mean: 0.972
+  Std:  0.394
+  Min:  0.538
+  Max:  1.681
+  Median: 0.842
+  Count: 36
+
+Execution Time (s):
+  Mean: 7.106
+  Std:  3.854
+  Min:  1.473
+  Max:  18.354
+  Median: 6.111
+  Count: 36
+
+Point Count:
+  Mean: 6756.194
+  Std:  3209.351
+  Min:  1952.000
+  Max:  14553.000
+  Median: 6734.500
+  Count: 36
+
+METHOD COMPARISON:
+----------------------------------------
+
+Chamfer Distance (mm):
+  Canny - Mean: 22.600 ± 24.105
+  RGBD  - Mean: 18.619 ± 12.050
+  Winner: RGBD
+
+Hausdorff Distance (mm):
+  Canny - Mean: 52.384 ± 57.381
+  RGBD  - Mean: 42.976 ± 22.977
+  Winner: RGBD
+
+Standard Residual (mm):
+  Canny - Mean: 12.819 ± 16.752
+  RGBD  - Mean: 9.550 ± 4.959
+  Winner: RGBD
+
+Coefficient of Variation:
+  Canny - Mean: 1.129 ± 0.472
+  RGBD  - Mean: 0.815 ± 0.196
+  Winner: RGBD
+
+Execution Time (s):
+  Canny - Mean: 5.040 ± 2.602
+  RGBD  - Mean: 9.172 ± 3.795
+  Winner: Canny
+
+Point Count:
+  Canny - Mean: 4450.056 ± 1733.038
+  RGBD  - Mean: 9062.333 ± 2638.162
+  Winner: RGBD
+
+
+OBJECT COMPARISON:
+----------------------------------------
+
+Chamfer Distance (mm):
+  Cube    - Mean: 4.843 ± 2.223
+  ctry.obj - Mean: 36.376 ± 15.234
+
+Hausdorff Distance (mm):
+  Cube    - Mean: 19.221 ± 3.221
+  ctry.obj - Mean: 76.139 ± 47.271
+
+Standard Residual (mm):
+  Cube    - Mean: 4.409 ± 0.965
+  ctry.obj - Mean: 17.960 ± 14.759
+
+Coefficient of Variation:
+  Cube    - Mean: 1.294 ± 0.311
+  ctry.obj - Mean: 0.650 ± 0.083
+
+Execution Time (s):
+  Cube    - Mean: 5.387 ± 1.533
+  ctry.obj - Mean: 8.826 ± 4.630
+
+Point Count:
+  Cube    - Mean: 5319.722 ± 1765.985
+  ctry.obj - Mean: 8192.667 ± 3654.349
+
+
+LIGHTING CONDITION COMPARISON:
+----------------------------------------
+
+Chamfer Distance (mm):
+  NORMAL   - Mean: 18.333 ± 13.788
+  BRIGHT   - Mean: 18.669 ± 14.117
+  DIM      - Mean: 24.826 ± 26.175
+
+Hausdorff Distance (mm):
+  NORMAL   - Mean: 41.589 ± 22.934
+  BRIGHT   - Mean: 43.125 ± 23.568
+  DIM      - Mean: 58.326 ± 67.414
+
+Standard Residual (mm):
+  NORMAL   - Mean: 9.409 ± 5.109
+  BRIGHT   - Mean: 9.568 ± 5.165
+  DIM      - Mean: 14.577 ± 19.894
+
+Coefficient of Variation:
+  NORMAL   - Mean: 0.973 ± 0.401
+  BRIGHT   - Mean: 0.989 ± 0.409
+  DIM      - Mean: 0.954 ± 0.370
+
+Execution Time (s):
+  NORMAL   - Mean: 7.587 ± 3.162
+  BRIGHT   - Mean: 6.781 ± 4.356
+  DIM      - Mean: 6.950 ± 3.901
+
+Point Count:
+  NORMAL   - Mean: 7194.333 ± 3013.278
+  BRIGHT   - Mean: 6513.500 ± 3566.289
+  DIM      - Mean: 6560.750 ± 2968.583
+
+
+DETAILED RESULTS TABLE:
+--------------------------------------------------------------------------------
+Object     Lighting Method N   chamfer_ hausdorf std_resi cv_resid executio point_co 
+--------------------------------------------------------------------------------
+Cube       normal   CANNY  3   3.179    18.966   4.273    1.612    3.935    3707.333 
+Cube       normal   RGBD   3   6.071    18.794   4.459    0.974    7.106    7474.667 
+Cube       bright   CANNY  3   2.827    17.984   3.868    1.623    4.218    3777.000 
+Cube       bright   RGBD   3   6.690    21.710   5.083    1.074    7.147    7132.667 
+Cube       dim      CANNY  3   3.117    17.736   4.279    1.543    4.187    3811.667 
+Cube       dim      RGBD   3   7.176    20.133   4.495    0.941    5.727    6015.000 
+ctry.obj   normal   CANNY  3   33.297   63.341   14.311   0.666    6.992    6117.333 
+ctry.obj   normal   RGBD   3   30.787   65.253   14.593   0.643    12.318   11478.000 
+ctry.obj   bright   CANNY  3   34.909   66.088   14.705   0.620    4.256    3544.000 
+ctry.obj   bright   RGBD   3   30.250   66.719   14.616   0.641    11.502   11600.333 
+ctry.obj   dim      CANNY  3   58.273   130.186  35.480   0.714    6.654    5743.000 
+ctry.obj   dim      RGBD   3   30.739   65.248   14.054   0.619    11.232   10673.333 

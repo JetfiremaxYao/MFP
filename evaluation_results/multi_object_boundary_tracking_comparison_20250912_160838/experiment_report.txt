@@ -1,0 +1,26 @@
+边界追踪算法对比实验报告
+==================================================
+
+实验名称: multi_object_boundary_tracking_comparison
+实验时间: 2025-09-12T16:08:38.115884
+重复次数: 3
+
+实验配置:
+  盒子尺寸: [0.105 0.18  0.022]
+  基础位置: [0.35 0.08 0.02]
+  位置扰动: ±0.02m
+  高度扰动: ±0.005m
+  光照条件: ['normal', 'bright', 'dim']
+  背景条件: ['simple']
+
+硬件信息:
+  platform: macOS-15.6.1-arm64-arm-64bit
+  python_version: 3.10.18
+  cpu_count: 12
+  memory_gb: 24.0
+  genesis_version: 0.2.1
+
+详细结果:
+
+NORMAL 光照环境:
+  CANNY方法:

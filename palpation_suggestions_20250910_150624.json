@@ -1,0 +1,77 @@
+[
+  {
+    "position": [
+      0.26000600414771435,
+      0.012446546473648158,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 1,
+    "confidence": 0.0002837122550402685,
+    "reason": "\u68c0\u6d4b\u5230\u6700\u9ad8\u70b9\u533a\u57df1\uff0c\u9ad8\u5ea6=0.0014m",
+    "anomaly_id": 1,
+    "strength": 0.0014185612752013427,
+    "height_elevation": 0.003068108708065259,
+    "area_mm2": 281.11781681867996
+  },
+  {
+    "position": [
+      0.3401673412523311,
+      0.03787494106387453,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 2,
+    "confidence": 0.00023038873292061235,
+    "reason": "\u68c0\u6d4b\u5230\u6700\u9ad8\u70b9\u533a\u57df2\uff0c\u9ad8\u5ea6=0.0012m",
+    "anomaly_id": 3,
+    "strength": 0.0011519436646030617,
+    "height_elevation": 0.0034001659058524314,
+    "area_mm2": 481.91625740345137
+  },
+  {
+    "position": [
+      0.2850400808318427,
+      0.08804933456264072,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 3,
+    "confidence": 0.00015103954824098102,
+    "reason": "\u68c0\u6d4b\u5230\u6700\u9ad8\u70b9\u533a\u57df3\uff0c\u9ad8\u5ea6=0.0008m",
+    "anomaly_id": 4,
+    "strength": 0.0007551977412049051,
+    "height_elevation": 0.004962510237566643,
+    "area_mm2": 2931.6572325376624
+  },
+  {
+    "position": [
+      0.3880628214150806,
+      0.02401600823700593,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 4,
+    "confidence": 7.018685383720647e-05,
+    "reason": "\u68c0\u6d4b\u5230\u6700\u9ad8\u70b9\u533a\u57df4\uff0c\u9ad8\u5ea6=0.0004m",
+    "anomaly_id": 2,
+    "strength": 0.00035093426918603236,
+    "height_elevation": 0.0007895735319958241,
+    "area_mm2": 1392.2025213877484
+  },
+  {
+    "position": [
+      0.36587589640443197,
+      0.10044982979507283,
+      0.16999999999999998
+    ],
+    "type": "anomaly",
+    "priority": 5,
+    "confidence": 3.6124169084598113e-06,
+    "reason": "\u68c0\u6d4b\u5230\u6700\u9ad8\u70b9\u533a\u57df5\uff0c\u9ad8\u5ea6=0.0000m",
+    "anomaly_id": 5,
+    "strength": 1.8062084542299055e-05,
+    "height_elevation": 3.292582104293118e-05,
+    "area_mm2": 214.18500329042283
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "experiment_config": {
+    "n_runs": 3,
+    "object_names": [
+      "cube",
+      "tuoyuan",
+      "buguize",
+      "withtumor",
+      "ctry"
+    ],
+    "object_configs": {
+      "cube": {
+        "type": "box",
+        "size": 

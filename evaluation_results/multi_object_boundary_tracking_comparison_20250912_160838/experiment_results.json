@@ -1,0 +1,2936 @@
+{
+  "experiment_config": {
+    "n_runs": 3,
+    "lighting_conditions": [
+      "normal",
+      "bright",
+      "dim"
+    ],
+    "background_conditions": [
+      "simple"
+    ],
+    "test_objects": [
+      {
+        "name": "Cube",
+        "type": "box",
+        "base_pos": [
+          0.35,
+          0.08,
+          0.02
+        ],
+        "size": [
+          0.105,
+          0.18,
+          0.022
+        ],
+        "file": null
+      },
+      {
+        "name": "ctry.obj",
+        "type": "mesh",
+        "base_pos": [
+          0.35,
+          -0.08,
+          0.02
+        ],
+        "size": null,
+        "file": "../../genesis/assets/_myobj/ctry.obj"
+      }
+    ],
+    "position_perturbation": 0.02,
+    "height_perturbation": 0.005,
+    "coverage_threshold": 0.03,
+    "partial_coverage_threshold": 0.3,
+    "success_coverage_threshold": 0.7
+  },
+  "hardware_info": {
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "python_version": "3.10.18",
+    "cpu_count": 12,
+    "memory_gb": 24.0,
+    "genesis_version": "0.2.1"
+  },
+  "timestamp": "2025-09-12T16:08:38.115884",
+  "results": [
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 3874,
+      "execution_time": 4.054856061935425,
+      "accuracy_metrics": {
+        "chamfer_distance": 2.9519281453487434,
+        "hausdorff_distance": 21.221103483064624,
+        "mean_residual": 2.5433837209321304,
+        "median_residual": 0.7249900162825262,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.006969540526587507,
+        "adaptive_threshold_mm": 0.08561990413511728
+      },
+      "stability_metrics": {
+        "std_residual": 4.242777025630399,
+        "cv_residual": 1.668162373892782
+      },
+      "evaluation_details": {
+        "point_count": 3874,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 4230,
+      "execution_time": 4.28226113319397,
+      "accuracy_metrics": {
+        "chamfer_distance": 2.817207841334671,
+        "hausdorff_distance": 17.46089324347019,
+        "mean_residual": 2.4557928605760693,
+        "median_residual": 0.711762667382075,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.011583924349881796,
+        "adaptive_threshold_mm": 0.11001497483605063
+      },
+      "stability_metrics": {
+        "std_residual": 4.127552395204814,
+        "cv_residual": 1.6807412634291115
+      },
+      "evaluation_details": {
+        "point_count": 4230,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 3018,
+      "execution_time": 3.466430902481079,
+      "accuracy_metrics": {
+        "chamfer_distance": 3.7665170807215897,
+        "hausdorff_distance": 18.21646720584145,
+        "mean_residual": 2.9927008493706824,
+        "median_residual": 0.7543237781965396,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.009609012591119947,
+        "adaptive_threshold_mm": 0.11688514003114693
+      },
+      "stability_metrics": {
+        "std_residual": 4.447828824726958,
+        "cv_residual": 1.4862256699202883
+      },
+      "evaluation_details": {
+        "point_count": 3018,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 3857,
+      "execution_time": 3.993859052658081,
+      "accuracy_metrics": {
+        "chamfer_distance": 2.7221032575670643,
+        "hausdorff_distance": 19.08245394814863,
+        "mean_residual": 2.4583119767902306,
+        "median_residual": 0.6956239466984736,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.00855587243971999,
+        "adaptive_threshold_mm": 0.1094775075127657
+      },
+      "stability_metrics": {
+        "std_residual": 4.122812866209262,
+        "cv_residual": 1.677090989725534
+      },
+      "evaluation_details": {
+        "point_count": 3857,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 3273,
+      "execution_time": 3.9170799255371094,
+      "accuracy_metrics": {
+        "chamfer_distance": 2.388568776076077,
+        "hausdorff_distance": 15.490908771150629,
+        "mean_residual": 2.055695721441662,
+        "median_residual": 0.7989296220618453,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.022303696914146045,
+        "adaptive_threshold_mm": 0.15467305530283196
+      },
+      "stability_metrics": {
+        "std_residual": 3.1866046826694503,
+        "cv_residual": 1.5501344140730515
+      },
+      "evaluation_details": {
+        "point_count": 3273,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 4201,
+      "execution_time": 4.7432849407196045,
+      "accuracy_metrics": {
+        "chamfer_distance": 3.3695767817815736,
+        "hausdorff_distance": 19.380038497010396,
+        "mean_residual": 2.617733535936127,
+        "median_residual": 0.7293510186873949,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0042846941204475126,
+        "adaptive_threshold_mm": 0.08048157449534697
+      },
+      "stability_metrics": {
+        "std_residual": 4.296017915153641,
+        "cv_residual": 1.641121166909505
+      },
+      "evaluation_details": {
+        "point_count": 4201,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 3840,
+      "execution_time": 4.2912468910217285,
+      "accuracy_metrics": {
+        "chamfer_distance": 3.6134010548426505,
+        "hausdorff_distance": 17.443858985854895,
+        "mean_residual": 3.350310648522824,
+        "median_residual": 0.7501037189345985,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.008333333333333333,
+        "adaptive_threshold_mm": 0.09594715393752216
+      },
+      "stability_metrics": {
+        "std_residual": 5.036211231139649,
+        "cv_residual": 1.5032072423971046
+      },
+      "evaluation_details": {
+        "point_count": 3840,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 4346,
+      "execution_time": 4.497388124465942,
+      "accuracy_metrics": {
+        "chamfer_distance": 3.442377371622997,
+        "hausdorff_distance": 20.740173191610936,
+        "mean_residual": 3.0044877378846007,
+        "median_residual": 0.7432245501227891,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.00529222273354809,
+        "adaptive_threshold_mm": 0.081747315060784
+      },
+      "stability_metrics": {
+        "std_residual": 4.732037703244115,
+        "cv_residual": 1.5749898538696807
+      },
+      "evaluation_details": {
+        "point_count": 4346,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 3249,
+      "execution_time": 3.7736051082611084,
+      "accuracy_metrics": {
+        "chamfer_distance": 2.2947265205716767,
+        "hausdorff_distance": 15.025254047505104,
+        "mean_residual": 1.9795693712355453,
+        "median_residual": 0.8085248082067982,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.017236072637734686,
+        "adaptive_threshold_mm": 0.1470425575765725
+      },
+      "stability_metrics": {
+        "std_residual": 3.0676233217265163,
+        "cv_residual": 1.549641738400844
+      },
+      "evaluation_details": {
+        "point_count": 3249,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 8216,
+      "execution_time": 7.771709203720093,
+      "accuracy_metrics": {
+        "chamfer_distance": 6.6291704562136475,
+        "hausdorff_distance": 22.684693613260265,
+        "mean_residual": 5.111858689215474,
+        "median_residual": 2.1672993440268713,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0009737098344693282,
+        "adaptive_threshold_mm": 0.18871369736514879
+      },
+      "stability_metrics": {
+        "std_residual": 5.480524420460052,
+        "cv_residual": 1.0721197031565748
+      },
+      "evaluation_details": {
+        "point_count": 8216,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 6006,
+      "execution_time": 5.784905910491943,
+      "accuracy_metrics": {
+        "chamfer_distance": 4.9335568512282615,
+        "hausdorff_distance": 11.297050201142605,
+        "mean_residual": 3.138258683894427,
+        "median_residual": 1.9709484485061117,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0001665001665001665,
+        "adaptive_threshold_mm": 0.105108565886227
+      },
+      "stability_metrics": {
+        "std_residual": 2.4496331777991953,
+        "cv_residual": 0.780570827500848
+      },
+      "evaluation_details": {
+        "point_count": 6006,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 8202,
+      "execution_time": 7.760010004043579,
+      "accuracy_metrics": {
+        "chamfer_distance": 6.6491712202177045,
+        "hausdorff_distance": 22.39913858940825,
+        "mean_residual": 5.100523998887739,
+        "median_residual": 2.1780726317833214,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.000365764447695684,
+        "adaptive_threshold_mm": 0.17808500024911922
+      },
+      "stability_metrics": {
+        "std_residual": 5.446885375305388,
+        "cv_residual": 1.0679070182775687
+      },
+      "evaluation_details": {
+        "point_count": 8202,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 6995,
+      "execution_time": 6.8768510818481445,
+      "accuracy_metrics": {
+        "chamfer_distance": 5.4706930193356405,
+        "hausdorff_distance": 20.55366975066413,
+        "mean_residual": 4.239379936554534,
+        "median_residual": 2.0780946101995936,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0001429592566118656,
+        "adaptive_threshold_mm": 0.19377191859495044
+      },
+      "stability_metrics": {
+        "std_residual": 4.557846693146089,
+        "cv_residual": 1.075121069910611
+      },
+      "evaluation_details": {
+        "point_count": 6995,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 7434,
+      "execution_time": 7.566288948059082,
+      "accuracy_metrics": {
+        "chamfer_distance": 9.153270505554667,
+        "hausdorff_distance": 23.67824802762578,
+        "mean_residual": 5.733684631941468,
+        "median_residual": 2.1045005638615986,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.00013451708366962604,
+        "adaptive_threshold_mm": 0.1630110468618304
+      },
+      "stability_metrics": {
+        "std_residual": 6.1527651192747905,
+        "cv_residual": 1.0730909553341477
+      },
+      "evaluation_details": {
+        "point_count": 7434,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 6969,
+      "execution_time": 6.998003005981445,
+      "accuracy_metrics": {
+        "chamfer_distance": 5.447359236426448,
+        "hausdorff_distance": 20.89745321276311,
+        "mean_residual": 4.229198128873465,
+        "median_residual": 2.046804895633843,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.19346660768415522
+      },
+      "stability_metrics": {
+        "std_residual": 4.538178148828549,
+        "cv_residual": 1.0730587715542632
+      },
+      "evaluation_details": {
+        "point_count": 6969,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        0.09802857225639665,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 4433,
+      "execution_time": 3.936187982559204,
+      "accuracy_metrics": {
+        "chamfer_distance": 10.369591159122166,
+        "hausdorff_distance": 22.151248092726938,
+        "mean_residual": 6.580587557424245,
+        "median_residual": 2.311893705169613,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.00022558087074216106,
+        "adaptive_threshold_mm": 0.19667441171838596
+      },
+      "stability_metrics": {
+        "std_residual": 5.946489501692177,
+        "cv_residual": 0.903641118638916
+      },
+      "evaluation_details": {
+        "point_count": 4433,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.09802857225639665
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        0.08436266157117926,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 7112,
+      "execution_time": 7.028518915176392,
+      "accuracy_metrics": {
+        "chamfer_distance": 5.7155038430373475,
+        "hausdorff_distance": 22.56771813440119,
+        "mean_residual": 4.184801461988537,
+        "median_residual": 2.0726157386506454,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.00014060742407199101,
+        "adaptive_threshold_mm": 0.18696033847721122
+      },
+      "stability_metrics": {
+        "std_residual": 4.24054060998076,
+        "cv_residual": 1.0133194247083197
+      },
+      "evaluation_details": {
+        "point_count": 7112,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.08436266157117926
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.08999999999999998
+        ],
+        [
+          -0.05249999999999999,
+          0.08999999999999998
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "Cube",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        0.06419184417479479,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 6500,
+      "execution_time": 6.216275930404663,
+      "accuracy_metrics": {
+        "chamfer_distance": 5.44324282706793,
+        "hausdorff_distance": 15.680847962539067,
+        "mean_residual": 3.635996513182991,
+        "median_residual": 2.065372048549132,
+        "coverage_3mm": 1.0,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.14895354696363378
+      },
+      "stability_metrics": {
+        "std_residual": 3.297609868851188,
+        "cv_residual": 0.9069342769980888
+      },
+      "evaluation_details": {
+        "point_count": 6500,
+        "coverage_3mm": 1.0,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          -0.06419184417479479
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 8198,
+      "execution_time": 7.856271743774414,
+      "accuracy_metrics": {
+        "chamfer_distance": 33.42457809355132,
+        "hausdorff_distance": 65.46380465792402,
+        "mean_residual": 23.933927512332474,
+        "median_residual": 23.206206080902806,
+        "coverage_3mm": 0.6829714564527933,
+        "coverage_adaptive": 0.00048792388387411563,
+        "adaptive_threshold_mm": 0.11097097653548275
+      },
+      "stability_metrics": {
+        "std_residual": 13.830790926150947,
+        "cv_residual": 0.5778738537176704
+      },
+      "evaluation_details": {
+        "point_count": 8198,
+        "coverage_3mm": 0.6829714564527933,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 5496,
+      "execution_time": 7.11362886428833,
+      "accuracy_metrics": {
+        "chamfer_distance": 33.10837575597443,
+        "hausdorff_distance": 60.32933572171836,
+        "mean_residual": 20.331672984547644,
+        "median_residual": 14.196097304938787,
+        "coverage_3mm": 0.7147016011644832,
+        "coverage_adaptive": 0.000363901018922853,
+        "adaptive_threshold_mm": 0.0653930860982735
+      },
+      "stability_metrics": {
+        "std_residual": 14.275880683216364,
+        "cv_residual": 0.7021498277129598
+      },
+      "evaluation_details": {
+        "point_count": 5496,
+        "coverage_3mm": 0.7147016011644832,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 4658,
+      "execution_time": 6.004928112030029,
+      "accuracy_metrics": {
+        "chamfer_distance": 33.35770799738169,
+        "hausdorff_distance": 64.23032551256243,
+        "mean_residual": 20.66872319261099,
+        "median_residual": 14.227232007630073,
+        "coverage_3mm": 0.7037355088020609,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.07761729364599308
+      },
+      "stability_metrics": {
+        "std_residual": 14.825302968167842,
+        "cv_residual": 0.7172819931841675
+      },
+      "evaluation_details": {
+        "point_count": 4658,
+        "coverage_3mm": 0.7037355088020609,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 2319,
+      "execution_time": 5.1275529861450195,
+      "accuracy_metrics": {
+        "chamfer_distance": 36.25260674282231,
+        "hausdorff_distance": 74.38371417625504,
+        "mean_residual": 24.593443556084193,
+        "median_residual": 23.16855293486539,
+        "coverage_3mm": 0.6834842604570935,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.2537221836872465
+      },
+      "stability_metrics": {
+        "std_residual": 16.24938442065665,
+        "cv_residual": 0.6607201786769181
+      },
+      "evaluation_details": {
+        "point_count": 2319,
+        "coverage_3mm": 0.6834842604570935,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 5002,
+      "execution_time": 4.792508125305176,
+      "accuracy_metrics": {
+        "chamfer_distance": 33.87360144127561,
+        "hausdorff_distance": 60.45420977939252,
+        "mean_residual": 22.923297500612023,
+        "median_residual": 22.38699975097014,
+        "coverage_3mm": 0.6793282686925229,
+        "coverage_adaptive": 0.0009996001599360256,
+        "adaptive_threshold_mm": 0.17812422943294134
+      },
+      "stability_metrics": {
+        "std_residual": 13.532031540533566,
+        "cv_residual": 0.5903178432410205
+      },
+      "evaluation_details": {
+        "point_count": 5002,
+        "coverage_3mm": 0.6793282686925229,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 3311,
+      "execution_time": 2.8483481407165527,
+      "accuracy_metrics": {
+        "chamfer_distance": 34.60030510791735,
+        "hausdorff_distance": 63.427426064413595,
+        "mean_residual": 23.529004184084844,
+        "median_residual": 21.90906055381403,
+        "coverage_3mm": 0.6825732407127756,
+        "coverage_adaptive": 0.0003020235578375113,
+        "adaptive_threshold_mm": 0.19590031524686163
+      },
+      "stability_metrics": {
+        "std_residual": 14.334368085720733,
+        "cv_residual": 0.6092211966801631
+      },
+      "evaluation_details": {
+        "point_count": 3311,
+        "coverage_3mm": 0.6825732407127756,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 1952,
+      "execution_time": 1.473114013671875,
+      "accuracy_metrics": {
+        "chamfer_distance": 42.080554684374604,
+        "hausdorff_distance": 59.64459452623254,
+        "mean_residual": 26.07512330324897,
+        "median_residual": 25.86961065294645,
+        "coverage_3mm": 0.5968237704918032,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.2447355656009754
+      },
+      "stability_metrics": {
+        "std_residual": 14.018797749075816,
+        "cv_residual": 0.5376311201308516
+      },
+      "evaluation_details": {
+        "point_count": 1952,
+        "coverage_3mm": 0.5968237704918032,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 7409,
+      "execution_time": 14.08330512046814,
+      "accuracy_metrics": {
+        "chamfer_distance": 34.73511050015658,
+        "hausdorff_distance": 60.4285872995465,
+        "mean_residual": 20.276505462460044,
+        "median_residual": 15.82937551189787,
+        "coverage_3mm": 0.7233094884599811,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.060539520492919545
+      },
+      "stability_metrics": {
+        "std_residual": 13.676576138066736,
+        "cv_residual": 0.6745036102689179
+      },
+      "evaluation_details": {
+        "point_count": 7409,
+        "coverage_3mm": 0.7233094884599811,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "canny",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 7868,
+      "execution_time": 4.4070398807525635,
+      "accuracy_metrics": {
+        "chamfer_distance": 98.00478809813247,
+        "hausdorff_distance": 270.4861826557577,
+        "mean_residual": 84.72095565912585,
+        "median_residual": 39.71878306942094,
+        "coverage_3mm": 0.35320284697508897,
+        "coverage_adaptive": 0.00012709710218607016,
+        "adaptive_threshold_mm": 0.11495337667623184
+      },
+      "stability_metrics": {
+        "std_residual": 78.74318942161659,
+        "cv_residual": 0.9294417043457258
+      },
+      "evaluation_details": {
+        "point_count": 7868,
+        "coverage_3mm": 0.35320284697508897,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 12203,
+      "execution_time": 13.423194169998169,
+      "accuracy_metrics": {
+        "chamfer_distance": 30.303582276830983,
+        "hausdorff_distance": 66.21520941599333,
+        "mean_residual": 22.533659478060013,
+        "median_residual": 18.392959028838032,
+        "coverage_3mm": 0.6995820699827912,
+        "coverage_adaptive": 0.00032778824879128084,
+        "adaptive_threshold_mm": 0.1322488022353685
+      },
+      "stability_metrics": {
+        "std_residual": 15.1269255919459,
+        "cv_residual": 0.6713035495488112
+      },
+      "evaluation_details": {
+        "point_count": 12203,
+        "coverage_3mm": 0.6995820699827912,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 10098,
+      "execution_time": 10.261656999588013,
+      "accuracy_metrics": {
+        "chamfer_distance": 31.78314366946211,
+        "hausdorff_distance": 62.57431559240077,
+        "mean_residual": 23.333213372424957,
+        "median_residual": 23.044815845984118,
+        "coverage_3mm": 0.6817191523073876,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.14525273979863598
+      },
+      "stability_metrics": {
+        "std_residual": 13.668959071169196,
+        "cv_residual": 0.5858155434057396
+      },
+      "evaluation_details": {
+        "point_count": 10098,
+        "coverage_3mm": 0.6817191523073876,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "normal",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 12133,
+      "execution_time": 13.268188953399658,
+      "accuracy_metrics": {
+        "chamfer_distance": 30.274723904497627,
+        "hausdorff_distance": 66.9699568671649,
+        "mean_residual": 22.30697580040175,
+        "median_residual": 18.58921911293237,
+        "coverage_3mm": 0.7038654908101871,
+        "coverage_adaptive": 0.0004120992334954257,
+        "adaptive_threshold_mm": 0.13255333900246033
+      },
+      "stability_metrics": {
+        "std_residual": 14.982229238846799,
+        "cv_residual": 0.6716387453370961
+      },
+      "evaluation_details": {
+        "point_count": 12133,
+        "coverage_3mm": 0.7038654908101871,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 14553,
+      "execution_time": 18.35367202758789,
+      "accuracy_metrics": {
+        "chamfer_distance": 29.29077011208119,
+        "hausdorff_distance": 67.97566078081094,
+        "mean_residual": 22.946410694266586,
+        "median_residual": 23.008484062366506,
+        "coverage_3mm": 0.7300213014498729,
+        "coverage_adaptive": 0.0005497148354291211,
+        "adaptive_threshold_mm": 0.13924474940841183
+      },
+      "stability_metrics": {
+        "std_residual": 14.12580081960246,
+        "cv_residual": 0.615599581468833
+      },
+      "evaluation_details": {
+        "point_count": 14553,
+        "coverage_3mm": 0.7300213014498729,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 12072,
+      "execution_time": 12.949183225631714,
+      "accuracy_metrics": {
+        "chamfer_distance": 30.16962960439397,
+        "hausdorff_distance": 63.24033356235279,
+        "mean_residual": 21.93922953380922,
+        "median_residual": 18.376951330669442,
+        "coverage_3mm": 0.7034459907223327,
+        "coverage_adaptive": 0.00024850894632206757,
+        "adaptive_threshold_mm": 0.13229274194663937
+      },
+      "stability_metrics": {
+        "std_residual": 14.817170548231383,
+        "cv_residual": 0.675373331839094
+      },
+      "evaluation_details": {
+        "point_count": 12072,
+        "coverage_3mm": 0.7034459907223327,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "bright",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 8176,
+      "execution_time": 3.2040629386901855,
+      "accuracy_metrics": {
+        "chamfer_distance": 31.28840127145454,
+        "hausdorff_distance": 68.94137703584538,
+        "mean_residual": 23.58714281194528,
+        "median_residual": 22.211899583860426,
+        "coverage_3mm": 0.7155088062622309,
+        "coverage_adaptive": 0.000611545988258317,
+        "adaptive_threshold_mm": 0.2008578974119067
+      },
+      "stability_metrics": {
+        "std_residual": 14.905648792348078,
+        "cv_residual": 0.6319395660249018
+      },
+      "evaluation_details": {
+        "point_count": 8176,
+        "coverage_3mm": 0.7155088062622309,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 0,
+      "object_pos": [
+        0.3449816047538945,
+        -0.061971427743603355,
+        0.02231993941811405
+      ],
+      "status": "Success",
+      "point_count": 10121,
+      "execution_time": 10.226624011993408,
+      "accuracy_metrics": {
+        "chamfer_distance": 31.515501573845693,
+        "hausdorff_distance": 65.93034334345975,
+        "mean_residual": 23.43565520824164,
+        "median_residual": 23.504011719916228,
+        "coverage_3mm": 0.682640055330501,
+        "coverage_adaptive": 9.880446596186147e-05,
+        "adaptive_threshold_mm": 0.15012285813712667
+      },
+      "stability_metrics": {
+        "std_residual": 13.745789145493612,
+        "cv_residual": 0.586533170220887
+      },
+      "evaluation_details": {
+        "point_count": 10121,
+        "coverage_3mm": 0.682640055330501,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.3449816047538945
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.061971427743603355
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02231993941811405
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 1,
+      "object_pos": [
+        0.33460218265559116,
+        -0.07563733842882074,
+        0.016333909641859882
+      ],
+      "status": "Success",
+      "point_count": 9772,
+      "execution_time": 10.007783889770508,
+      "accuracy_metrics": {
+        "chamfer_distance": 30.466362545726263,
+        "hausdorff_distance": 62.87894391255179,
+        "mean_residual": 22.45548061317853,
+        "median_residual": 22.445620983820245,
+        "coverage_3mm": 0.6954564060581253,
+        "coverage_adaptive": 0.0,
+        "adaptive_threshold_mm": 0.15630711693579863
+      },
+      "stability_metrics": {
+        "std_residual": 13.47060381615004,
+        "cv_residual": 0.5998804500423162
+      },
+      "evaluation_details": {
+        "point_count": 9772,
+        "coverage_3mm": 0.6954564060581253,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.33460218265559116
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.07563733842882074
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.016333909641859882
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          -0.08999999999999998
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    },
+    {
+      "method": "rgbd",
+      "object_name": "ctry.obj",
+      "lighting": "dim",
+      "background": "simple",
+      "run_id": 2,
+      "object_pos": [
+        0.36339368594662597,
+        -0.09580815582520522,
+        0.02244640481679518
+      ],
+      "status": "Success",
+      "point_count": 12127,
+      "execution_time": 13.460677146911621,
+      "accuracy_metrics": {
+        "chamfer_distance": 30.235449776786403,
+        "hausdorff_distance": 66.9352531892563,
+        "mean_residual": 22.286268066467713,
+        "median_residual": 18.569707555261974,
+        "coverage_3mm": 0.7057804898161129,
+        "coverage_adaptive": 0.00041230312525768946,
+        "adaptive_threshold_mm": 0.13190874610796124
+      },
+      "stability_metrics": {
+        "std_residual": 14.94611916595095,
+        "cv_residual": 0.6706425284563067
+      },
+      "evaluation_details": {
+        "point_count": 12127,
+        "coverage_3mm": 0.7057804898161129,
+        "closure_detected": true,
+        "returned_to_start": false,
+        "success_criteria_met": true
+      },
+      "transform_matrix": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          -0.36339368594662597
+        ],
+        [
+          0.0,
+          1.0,
+          0.0,
+          0.09580815582520522
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          -0.02244640481679518
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "rect_vertices": [
+        [
+          -0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          -0.09
+        ],
+        [
+          0.05249999999999999,
+          0.09
+        ],
+        [
+          -0.05249999999999999,
+          0.09
+        ]
+      ],
+      "edge_samples_count": 284
+    }
+  ]
+}

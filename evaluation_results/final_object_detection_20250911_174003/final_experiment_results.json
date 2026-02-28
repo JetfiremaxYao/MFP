@@ -1,0 +1,86 @@
+{
+  "experiment_config": {
+    "n_trials_per_condition": 2,
+    "lighting_conditions": [
+      "normal",
+      "bright",
+      "dim"
+    ],
+    "object_types": [
+      {
+        "name": "ttt_obj",
+        "file": "genesis/assets/_myobj/ttt.obj",
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "type": "mesh"
+      },
+      {
+        "name": "ctry_obj",
+        "file": "genesis/assets/_myobj/ctry.obj",
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "type": "mesh"
+      },
+      {
+        "name": "tuoyuan_obj",
+        "file": "genesis/assets/_myobj/tuoyuan.obj",
+        "size": [
+          0.1,
+          0.1,
+          0.1
+        ],
+        "type": "mesh"
+      },
+      {
+        "name": "cube",
+        "size": [
+          0.105,
+          0.18,
+          0.022
+        ],
+        "type": "box"
+      }
+    ],
+    "min_radius": 0.3,
+    "max_radius": 0.8,
+    "n_objects": 4
+  },
+  "timestamp": "2025-09-11T18:04:46.154038",
+  "trial_results": [
+    {
+      "method": "hsv_depth",
+      "object_type": "ttt_obj",
+      "lighting": "normal",
+      "trial_id": 0,
+      "seed": 1371446657,
+      "object_position": [
+        0.4261194456118197,
+        -0.18238990971261518,
+        0.01653719977982774
+      ],
+      "object_size": [
+        0.1,
+        0.1,
+        0.1
+      ],
+      "detected_position": [
+        0.4175282930636639,
+        -0.18069957516018453,
+        0.03712588391116406
+      ],
+      "detected_range": [
+        0.32572037664431175,
+        0.533846459824167,
+        -0.2795787489840577,
+        -0.1080647453694628
+      ],
+      "pos_error_mm": 22.37317695958186,
+      "range_error_mm": 129.63603888118948,
+      "detection_time_s": 2.319622755050659,
+      "success_pos_2cm": 
